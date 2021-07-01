@@ -1,0 +1,19 @@
+<odoo>
+  <data>
+
+    <record id="documents.document_action" model="ir.actions.act_window">
+      <field name="name">Documents</field>
+      <field name="res_model">documents.document</field>
+      <field name="view_mode">tree,kanban,form</field>
+      <field name="domain">[]</field>
+      <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('documents.documents_view_list')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('documents.document_view_kanban')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('documents.document_view_form')})]"/>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">Upload <span class="font-weight-normal">a file or</span> drag <span class="font-weight-normal">it here.</span></p>
+      </field>
+    </record>
+
+  </data>
+</odoo>

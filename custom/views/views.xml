@@ -1,0 +1,9 @@
+<odoo>
+  <data>
+    <template id="assets_backend" name="calenasdasdar assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/custom/src/js/check.js"></script>
+        </xpath>
+    </template>
+  </data>
+</odoo>
