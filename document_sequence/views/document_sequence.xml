@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+        <record id="document_folder_seq_form_view" model="ir.ui.view">
+            <field name="name">document.folder.form.view.inh</field>
+            <field name="model">documents.folder</field>
+            <field name="inherit_id" ref="documents.folder_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_folder_id']" position="after">
+                    <field name="doc_seq" readonly ="1"/>
+                    <field name="complete_seq" readonly ="1" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>    
