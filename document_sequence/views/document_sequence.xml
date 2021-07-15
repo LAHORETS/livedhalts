@@ -11,5 +11,37 @@
                 </xpath>
             </field>
         </record>
+        
+        
+        
+        <record id="document_folder_seq_search_view" model="ir.ui.view">
+            <field name="name">custom document.folder.search.view.inh</field>
+            <field name="model">documents.document</field>
+            <field name="inherit_id" ref="documents.document_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[1]/filter[@name='owner']" position="after">
+                    <filter name="folder_seq_group" string="Sequence" domain="[]" context="{'group_by':'doc_seq'}"/>
+                </xpath>
+            </field>
+        </record>
+        
+        
+        
+        
+         <record id="document_doc_seq_form_view_inh" model="ir.ui.view">
+            <field name="name">custom document.doc.form.view.inh</field>
+            <field name="model">documents.document</field>
+            <field name="inherit_id" ref="documents.document_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='owner_id']" position="after">
+                        <field name="doc_seq"  invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+        
+        
+        
+        
+        
     </data>
 </odoo>    

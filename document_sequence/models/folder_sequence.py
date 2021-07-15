@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api,_
 
 
 
@@ -85,4 +85,15 @@ class document_sequence(models.Model):
                 
         return res
     
+class DocumentAttachmentDOC(models.Model):
+    _inherit="documents.document"
     
+    doc_seq=fields.Char('document sequence')
+    
+    
+    @api.onchange('folder_id')
+    def onchange_folder_seq(self):
+        if self.folder_id:
+            if self.folder_id.complete_seq:
+                self.doc_seq = self.folder_id.complete_seq
+        
