@@ -1,5 +1,5 @@
 from odoo import models, fields, api,_
-
+from odoo.exceptions import ValidationError, UserError
 
 
 class document_sequence(models.Model):
@@ -81,10 +81,27 @@ class document_sequence(models.Model):
             elif self.parent_folder_id:
                 fold_seq = self.get_sequence(self ,self.parent_folder_id)
                 self.doc_seq = fold_seq
-                self.complete_seq = str(self.parent_folder_id.complete_seq) +'.'+ str(self.doc_seq)
+                self.complete_seq = str(self.parent_folder_id.complete_seq) +'.'+ self.doc_seq
                 
         return res
+
+class DocumentAttachmentCustom(models.Model):
+    _inherit="ir.attachment"  
     
+    
+#     @api.model_create_multi
+#     def create(self, vals_list):
+#         if 'name' in vals_list[0]:
+#             prev_files = self.env['documents.document'].search([]).mapped('name')
+#             if vals_list[0]['name'] in prev_files:
+#                 raise UserError(_('file already existed'))
+#             else:    
+#                 res = super(DocumentAttachmentCustom , self).create(vals_list)
+#                 return res
+#             
+        
+        
+        
 class DocumentAttachmentDOC(models.Model):
     _inherit="documents.document"
     
@@ -96,4 +113,29 @@ class DocumentAttachmentDOC(models.Model):
         if self.folder_id:
             if self.folder_id.complete_seq:
                 self.doc_seq = self.folder_id.complete_seq
-        
+    
+    
+    
+    def update_sequence(self):
+        for rec in self:
+            rec.onchange_folder_seq()
+    
+    
+    
+    @api.model
+    def get_all_records(self):
+        vehicle_type_name = []
+
+        record=self.env['documents.document'].search([])
+        for rec in record:
+            vehicle_type_name.append(rec)
+        # return record
+        return {
+            'record_ids': record
+        }
+        #
+
+
+
+    
+    
