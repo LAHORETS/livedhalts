@@ -110,7 +110,7 @@ class DocumentAttachmentDOC(models.Model):
     
     def _compute_file_type(self):
         for i in self:
-            x=i.name.split(".")
+            x=i.name.split(".")[-1]
             i.doc_file_type=x
     
     
