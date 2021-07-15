@@ -8,7 +8,7 @@ class DocumentAttachmentCustomValidate(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        if 'name' in vals_list[0]:
+        if if len(vals_list) > 0 and 'name' in vals_list[0]:
             prev_files = self.env['documents.document'].search([]).mapped('name')
             if vals_list[0]['name'] in prev_files:
                 raise UserError(_('file already existed'))
