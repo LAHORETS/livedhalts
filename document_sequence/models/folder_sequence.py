@@ -106,6 +106,12 @@ class DocumentAttachmentDOC(models.Model):
     _inherit="documents.document"
     
     doc_seq=fields.Char('document sequence')
+    doc_file_type=fields.Char('Type',compute="_compute_file_type")
+    
+    def _compute_file_type(self):
+        for i in self:
+            x=i.mimetype.split(".")
+            i.doc_file_type=x
     
     
     @api.onchange('folder_id')
