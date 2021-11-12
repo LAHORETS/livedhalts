@@ -33,7 +33,7 @@ This module
         'security/account_parent_security.xml',
         'views/account_view.xml',
         'views/open_chart.xml',
-        'data/account_type_data.xml',
+        # 'data/account_type_data.xml',
         'views/account_parent_template.xml',
         'views/report_coa_hierarchy.xml',
         'data/fiscal_year_menu.xml',

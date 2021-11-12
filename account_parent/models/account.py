@@ -36,21 +36,21 @@ class AccountAccountTemplate(models.Model):
 						limit=limit, order=order, count=count,access_rights_uid=access_rights_uid)
 
 
-class AccountAccountType(models.Model):
-	_inherit = "account.account.type"
-	
-	type = fields.Selection(selection_add=[('view', 'View')])
-	
-	@api.model
-	def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-		context = self._context or {}
-		new_args = args.copy()
-		# one Customer informed an issue that the same args is updated to company causing error
-		# So to avoid that args was copied to new variable and it solved the issue.
-		if not context.get('show_parent_account', False):
-			new_args = expression.AND([[('type', '!=', 'view')], args])
-		return super(AccountAccountType, self)._search(new_args, offset=offset,
-						limit=limit, order=order, count=count,access_rights_uid=access_rights_uid)
+# class AccountAccountType(models.Model):
+# 	_inherit = "account.account.type"
+#
+# 	type = fields.Selection(selection_add=[('view', 'View')])
+#
+# 	@api.model
+# 	def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+# 		context = self._context or {}
+# 		new_args = args.copy()
+# 		# one Customer informed an issue that the same args is updated to company causing error
+# 		# So to avoid that args was copied to new variable and it solved the issue.
+# 		if not context.get('show_parent_account', False):
+# 			new_args = expression.AND([[('type', '!=', 'view')], args])
+# 		return super(AccountAccountType, self)._search(new_args, offset=offset,
+# 						limit=limit, order=order, count=count,access_rights_uid=access_rights_uid)
 
 
 class AccountAccount(models.Model):
