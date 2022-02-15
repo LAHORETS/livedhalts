@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <div t-name="DocumentsKanbanView.buttons">
+        <button type="button" t-attf-class="btn btn-primary o_documents_kanban_upload" disabled="true">
+            Create
+        </button>
+        <button type="button" t-attf-class="btn btn-primary o_documents_kanban_url" disabled="true">
+            Add URL
+        </button>
+        <button type="button" t-attf-class="btn btn-primary o_documents_kanban_request" disabled="true">
+            Request Document
+        </button>
+        <button type="button" t-attf-class="btn btn-secondary o_documents_kanban_share" title="Share this domain" disabled="true" groups="documents.group_documents_user">
+            Share
+        </button>
+    </div>
+</templates>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+<odoo>
+    <data>
+
+        <record id="view_partner_form_fbr_inh" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="exempt"/>
+                    <field name="fbr_ntn"/>
+                    <field name="fbr_stn"/>
+                    <field name="fbr_ntn_active"/>
+                    <field name="fbr_stn_active"/>
+                    <field name="tax_type"/>
+                </xpath>
+
+                <xpath expr="//field[@name='company_type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_type']" position='after'>
+                    <field name="partner_type" options="{'horizontal': true}" class="oe_edit_only" widget="radio"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherit_account_move_form_view" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+
+
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object" name="get_vehicles"
+                            icon="fa-list">
+                        <field string="FBR Taxes" name="fbr_taxes" widget="statinfo"/>
+                    </button>
+                </div>
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="exempt"/>
+                    <field name="income_tax"/>
+                    <field name="prodtotal"/>
+                    <field name="service_tax"/>
+                    <field name="servicetotal"/>
+
+                      <field name="case_state"  invisible="0"/>
+                    <field name="case1"  invisible="1"/>
+                    <field name="case2" invisible="1"/>
+                    <field name="case3"  invisible="1"/>
+                    <field name="case4"  invisible="1"/>
+                    <field name="case5"  invisible="1"/>
+                    <field name="case" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//group[hasclass('oe_subtotal_footer')]" position="replace">
+                    <group>
+                        <group>
+                            <field name="global_discount_type" class="oe_inline" attrs="{'required': [('case', '!=', False)], 'readonly' : [('state', 'not in', ['draft'])]}"/>
+                            <field name="global_order_discount" invisible="1" groups="discount_account_invoice.group_order_global_discount" class="oe_inline" attrs="{'readonly' :[('state', 'not in', ['draft'])]}"/>
+                        </group>
+                        <group class="oe_subtotal_footer" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                            <field name="amount_untaxed"/>
+                            <field name="case_3_5" invisible="1"/>
+                            <field name="total_tax_amount" invisible="0"/>
+                            <field name="wth_amount" attrs="{'required':[('case','=',True)]}"/>
+                            <field name="tax_amount" attrs="{'invisible':[('case_3_5','=',True)]}"/>
+                            <field name="total_discount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            <field name="after_wht" invisible="0"/>
+                            <field name="after_tax_wht" invisible="0"/>
+                            <field name="grand_total" invisible="0"/>
+                            <field name="amount_by_group" widget="tax-group-custom-field" nolabel="1" colspan="2"/>
+                            <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                            <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
+                            <field name="amount_residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                        </group>
+                    </group>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="before">
+                    <field name="discount_type" invisible="1" groups="product.group_discount_per_so_line" optional="show"/>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='discount']" position="before">
+                    <field name="is_global_line" invisible="1"/>
+                    <field name="discount_type" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='tax_ids']" position="after">
+                    <field name="tax_amount" invisible="1"/>
+                    <field name="case_state" invisible="0"/>
+                </xpath>
+
+                   <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='tax_ids']" position="attributes">
+                  <attribute name="attrs">{'required': [('case_state','in',['3','5'])]}</attribute>
+              </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

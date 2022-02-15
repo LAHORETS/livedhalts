@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+       <record id="model_document_update_sequence" model="ir.actions.server">
+            <field name="name">Update Docs Sequence</field>
+            <!-- <field name="model_id" ref="merge_pickings.model_wizard_merge_picking"/>stock.model_stock_picking -->
+            <field name="model_id" ref="documents.model_documents_document"/>
+            <field name="binding_model_id" ref="documents.model_documents_document"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.update_sequence()</field>
+        </record>
+    </data>
+</odoo>

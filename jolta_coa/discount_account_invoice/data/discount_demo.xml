@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+<odoo>
+    <data noupdate="1">
+        <function model="ir.config_parameter" name="set_param" eval="('account.group_order_global_discount', True)"/>
+
+        <function model="ir.config_parameter" name="set_param" eval="('account.global_discount_tax', 'untax')"/>
+
+        <record id="demo_global_invoice_discount_account" model="account.account">
+            <field name="name">Income Tax Payable</field>
+            <field name="code">900901</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="True"/>
+        </record>
+
+        <record id="demo_global_bill_discount_account2" model="account.account">
+            <field name="name">Income Tax Payable</field>
+            <field name="code">900902</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="True"/>
+        </record>
+
+             <record id="demo_global_bill_discount_account3" model="account.account">
+            <field name="name">Sales Tax Current Asset</field>
+            <field name="code">900903</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="True"/>
+        </record>
+
+
+        <record id="demo_global_bill_discount_account4" model="account.account">
+            <field name="name">Sales Tax Payable</field>
+            <field name="code">900904</field>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
+            <field name="reconcile" eval="True"/>
+        </record>
+
+
+           <record id="demo_global_bill_discount_account5" model="account.account">
+            <field name="name">Sales Tax Expenses</field>
+            <field name="code">900905</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="True"/>
+        </record>
+
+
+        <record id="base.main_company" model="res.company">
+            <field name="discount_account_invoice" ref="demo_global_invoice_discount_account"/>
+            <field name="discount_account_bill" ref="demo_global_bill_discount_account"/>
+        </record>
+
+        <record id="base.user_admin" model="res.users">
+            <field name="groups_id" eval="[(4, ref('product.group_discount_per_so_line')), (4, ref('discount_account_invoice.group_order_global_discount'))]"/>
+        </record>
+    </data>
+</odoo>
