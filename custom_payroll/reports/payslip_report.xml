@@ -1,0 +1,11 @@
+<odoo>
+
+    <report id="payslip_report"
+            model="hr.payslip"
+            string="Payslip"
+            report_type="qweb-pdf"
+            name="custom_payroll.payslip_template"
+            file="custom_payroll.payslip_template"
+    />
+
+</odoo>

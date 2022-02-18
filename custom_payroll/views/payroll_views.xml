@@ -1,0 +1,48 @@
+<odoo>
+
+    <record id="view_hr_contract_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//group[@name='main_info']" position="after">
+                <group>
+                    <group name="allowances" string="Allowances">
+                        <field name="fuel_allowance"/>
+                        <field name="mobile_allowance"/>
+                        <field name="meal_allowance"/>
+                        <field name="arears"/>
+                        <field name="car_allowance"/>
+                        <field name="driver_allowance"/>
+                        <field name="over_time"/>
+                        <field name="other_allowance"/>
+                    </group>
+
+                    <group name="deductions" string="Deductions">
+                        <field name="income_tax"/>
+                        <field name="advances"/>
+                        <field name="provident_fund"/>
+                        <field name="unpaid_leaves"/>
+                        <field name="other_deductions"/>
+                    </group>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_form_inherit" model="ir.ui.view">
+        <field name="name">hr.payslip.form.inherit</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="unpaid_leave"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
