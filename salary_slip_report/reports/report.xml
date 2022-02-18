@@ -1,0 +1,11 @@
+<odoo>
+    <data>
+        <report
+                id="action_salary_report"
+                string="Salary Slip Report"
+                model="hr.payslip"
+                report_type="qweb-pdf"
+                name="salary_slip_report.report_salary_document"
+                file="salary_slip_report.report_salary_document"/>
+    </data>
+</odoo>

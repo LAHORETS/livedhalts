@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_salary_document">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="text-center">
+                            <h2>Lahore Times Square Limited</h2>
+                            <h6>111-D, Commercial Broadway, DHA Phase-8, Lahore Pakistan</h6>
+                            <h6>Salary Slip</h6>
+                        </div>
+                        <table class="table table-sm table-borderless" style="font-size: 11px;">
+                            <thead>
+                                <tr>
+                                    <th colspan="2" style="text-align:center; padding-left:150px"/>
+                                    <th colspan="2" style="text-align:center; padding-left:150px"/>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th style="text-align:left; padding-left:100px" width="30%">Employee Name</th>
+                                    <td style="text-align:left;" width="20%">
+                                        <!--                                    <hr style="border-top: 1px solid black"/>-->
+                                        <span t-field="o.employee_id.name"/>
+                                    </td>
+
+                                    <th style="text-align:left; padding-left:100px" width="30%">Employee Code</th>
+                                    <td style="text-align:left;" width="20%"/>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:left; padding-left:100px" width="30%">Department</th>
+                                    <td style="text-align:left;" width="20%">
+                                        <span t-field="o.employee_id.department_id.name"/>
+                                    </td>
+                                    <th style="text-align:left; padding-left:100px" width="30%">Designation</th>
+                                    <td style="text-align:left;" width="20%">
+                                        <span t-field="o.employee_id.job_title"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th style="text-align:left; padding-left:100px" width="30%">Date of joining</th>
+                                    <td style="text-align:left;" width="20%">
+                                        <span t-field="o.contract_id.date_start"/>
+                                    </td>
+                                    <th style="text-align:left; padding-left:100px" width="30%">For the month of</th>
+                                    <td style="text-align:left;" width="20%">
+                                        <span t-field="o.name"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th style="text-align:left; padding-left:100px" width="30%">Employment Status</th>
+                                    <td style="text-align:left;" width="20%"/>
+                                    <th style="text-align:left; padding-left:100px" width="30%">Year</th>
+                                    <td style="text-align:left;" width="20%"/>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-sm table-bordered no-spacing" style="font-size: 11px;">
+                            <thead>
+                                <tr>
+                                    <th colspan="2" style="text-align:center;">
+                                        <strong>
+                                            <h5>Earnings</h5>
+                                        </strong>
+                                    </th>
+                                    <th colspan="2" style="text-align:center;">
+                                        <strong>
+                                            <h5>Deductions</h5>
+                                        </strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th style="text-align:center;" width="30%">Basic Salary</th>
+                                    <td style="text-align:left;" width="20%">
+                                        <span t-esc="o.get_basic()"/>
+                                    </td>
+                                    <th width="30%"/>
+                                    <td style="text-align:left;" width="20%"/>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:center;">House Rent</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_hral()"/>
+                                    </td>
+                                    <th style="text-align:center;">Provident Fund</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_pfund()"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:center;">Utilities</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_utal()"/>
+                                    </td>
+                                    <th style="text-align:center;">Income Tax</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_incometax()"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:center;">Total Salary</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_basic() + o.get_hral() + o.get_utal()"/>
+                                    </td>
+                                    <th style="text-align:center;">EOBI</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_eobi()"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:left;">Additional Allowances:</th>
+                                    <td style="text-align:left;"/>
+                                    <th style="text-align:center;">PESSI</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_pessi()"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:center;">Fuel Allowance</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_fuel()"/>
+                                    </td>
+                                    <th style="text-align:center;">Advances / Loan</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_loan()"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:center;">Car Monetization Allowance</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_car()"/>
+                                    </td>
+                                    <th style="text-align:center;">Leaves without Pay</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_lwop()"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:center;">Driver Allowance</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_driver()"/>
+                                    </td>
+                                    <th style="text-align:center;">Others</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_otherded()"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:center;">Meal Allowance</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_meal()"/>
+                                    </td>
+                                    <th/>
+                                    <td style="text-align:left;"/>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:center;">Over Time</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_overtime()"/>
+                                    </td>
+                                    <th/>
+                                    <td style="text-align:left;"/>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:left;">Total Allowances</th>
+                                    <td style="text-align:left;"/>
+                                    <th/>
+                                    <td/>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:center;">Arears / Reimbursements</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_arears()"/>
+                                    </td>
+                                    <th/>
+                                    <td/>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:center;">Others</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_otheral()"/>
+                                    </td>
+                                    <th style="text-align:center;">Total Deductions</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_deductions()"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:center;">Bonus</th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_bonus()"/>
+                                    </td>
+                                    <th/>
+                                    <td/>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:center;">
+                                        <strong>Gross Salary</strong>
+                                    </th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_gross()"/>
+                                    </td>
+                                    <th style="text-align:center;">
+                                        <strong>Net Salary</strong>
+                                    </th>
+                                    <td style="text-align:left;">
+                                        <span t-esc="o.get_net()"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                        <br/>
+                        <div style="font-size:13px;">
+                            <span>
+                                <strong>Amount in Words:</strong>
+                            </span>
+                            <span t-esc="o.get_amount_in_words()"/>
+                        </div>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <div style="width:30%; float:left;text-align:center;">
+                            <hr style="border-top: 1px solid black"/>
+                            <span><strong>HR/Admin Department</strong></span>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
+
+
+
