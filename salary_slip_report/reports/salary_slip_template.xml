@@ -79,7 +79,7 @@
                                 <tr>
                                     <th style="text-align:center;" width="30%">Basic Salary</th>
                                     <td style="text-align:left;" width="20%">
-                                        <span t-esc="o.get_basic()"/>
+                                        <span t-esc="o.get_basic()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                     <th width="30%"/>
                                     <td style="text-align:left;" width="20%"/>
@@ -87,31 +87,31 @@
                                 <tr>
                                     <th style="text-align:center;">House Rent</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_hral()"/>
+                                        <span t-esc="o.get_hral()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                     <th style="text-align:center;">Provident Fund</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_pfund()"/>
+                                        <span t-esc="o.get_pfund()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th style="text-align:center;">Utilities</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_utal()"/>
+                                        <span t-esc="o.get_utal()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                     <th style="text-align:center;">Income Tax</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_incometax()"/>
+                                        <span t-esc="o.get_incometax()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th style="text-align:center;">Total Salary</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_basic() + o.get_hral() + o.get_utal()"/>
+                                        <span t-esc="o.get_basic() + o.get_hral() + o.get_utal()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                     <th style="text-align:center;">EOBI</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_eobi()"/>
+                                        <span t-esc="o.get_eobi()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -119,43 +119,43 @@
                                     <td style="text-align:left;"/>
                                     <th style="text-align:center;">PESSI</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_pessi()"/>
+                                        <span t-esc="o.get_pessi()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th style="text-align:center;">Fuel Allowance</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_fuel()"/>
+                                        <span t-esc="o.get_fuel()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                     <th style="text-align:center;">Advances / Loan</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_loan()"/>
+                                        <span t-esc="o.get_loan()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th style="text-align:center;">Car Monetization Allowance</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_car()"/>
+                                        <span t-esc="o.get_car()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                     <th style="text-align:center;">Leaves without Pay</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_lwop()"/>
+                                        <span t-esc="o.get_lwop()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th style="text-align:center;">Driver Allowance</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_driver()"/>
+                                        <span t-esc="o.get_driver()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                     <th style="text-align:center;">Others</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_otherded()"/>
+                                        <span t-esc="o.get_otherded()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th style="text-align:center;">Meal Allowance</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_meal()"/>
+                                        <span t-esc="o.get_meal()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                     <th/>
                                     <td style="text-align:left;"/>
@@ -163,7 +163,7 @@
                                 <tr>
                                     <th style="text-align:center;">Over Time</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_overtime()"/>
+                                        <span t-esc="o.get_overtime()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                     <th/>
                                     <td style="text-align:left;"/>
@@ -177,7 +177,7 @@
                                 <tr>
                                     <th style="text-align:center;">Arears / Reimbursements</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_arears()"/>
+                                        <span t-esc="o.get_arears()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                     <th/>
                                     <td/>
@@ -185,17 +185,17 @@
                                 <tr>
                                     <th style="text-align:center;">Others</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_otheral()"/>
+                                        <span t-esc="o.get_otheral()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                     <th style="text-align:center;">Total Deductions</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_deductions()"/>
+                                        <span t-esc="o.get_deductions()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th style="text-align:center;">Bonus</th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_bonus()"/>
+                                        <span t-esc="o.get_bonus()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                     <th/>
                                     <td/>
@@ -205,13 +205,13 @@
                                         <strong>Gross Salary</strong>
                                     </th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_gross()"/>
+                                        <span t-esc="o.get_gross()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                     <th style="text-align:center;">
                                         <strong>Net Salary</strong>
                                     </th>
                                     <td style="text-align:left;">
-                                        <span t-esc="o.get_net()"/>
+                                        <span t-esc="o.get_net()" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                     </td>
                                 </tr>
                             </tbody>
@@ -228,9 +228,15 @@
                         <br/>
                         <br/>
                         <br/>
-                        <div style="width:30%; float:left;text-align:center;">
-                            <hr style="border-top: 1px solid black"/>
-                            <span><strong>HR/Admin Department</strong></span>
+                        <div style="width:25%; float:left;text-align:center;">
+<!--                            <hr style="border-top: 1px solid black"/>-->
+<!--                            <span><strong>HR/Admin Department</strong></span>-->
+                            <br/>
+                            <table class="table table-sm table-borderless">
+                                <tr>
+                                    <td style="border-top: thin solid;"><strong>HR/Admin Department</strong></td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </t>
