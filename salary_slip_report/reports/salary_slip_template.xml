@@ -22,8 +22,10 @@
                                 <tr>
                                     <th style="text-align:left; padding-left:100px" width="30%">Employee Name</th>
                                     <td style="text-align:left;" width="20%">
+                                        <!--                                    <hr style="border-top: 1px solid black"/>-->
                                         <span t-field="o.employee_id.name"/>
                                     </td>
+
                                     <th style="text-align:left; padding-left:100px" width="30%">Employee Code</th>
                                     <td style="text-align:left;" width="20%"/>
                                 </tr>
@@ -75,216 +77,94 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <t t-if="o.get_basic() != 0.0 or o.get_basic() != 0">
                                     <th style="text-align:center;" width="30%">Basic Salary</th>
                                     <td style="text-align:left;" width="20%">
                                         <span t-esc="o.get_basic()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
                                     <th width="30%"/>
                                     <td style="text-align:left;" width="20%"/>
                                 </tr>
                                 <tr>
-                                    <t t-if="o.get_hral() != 0.0 or o.get_hral() != 0">
                                     <th style="text-align:center;">House Rent</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_hral()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
-                                    <t t-if="o.get_pfund() != 0.0 or o.get_pfund() != 0">
                                     <th style="text-align:center;">Provident Fund</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_pfund()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
                                 </tr>
                                 <tr>
-                                    <t t-if="o.get_utal() != 0.0 or o.get_utal() != 0">
                                     <th style="text-align:center;">Utilities</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_utal()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
-
-                                    <t t-if="o.get_incometax() != 0.0 or o.get_incometax() != 0">
                                     <th style="text-align:center;">Income Tax</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_incometax()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
                                 </tr>
                                 <tr>
                                     <th style="text-align:center;">Total Salary</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_basic() + o.get_hral() + o.get_utal()"/>
                                     </td>
-                                    <t t-if="o.get_eobi() != 0.0 or o.get_eobi() != 0">
                                     <th style="text-align:center;">EOBI</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_eobi()"/>
                                     </td>
-                                     </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
                                 </tr>
                                 <tr>
                                     <th style="text-align:left;">Additional Allowances:</th>
                                     <td style="text-align:left;"/>
-                                    <t t-if="o.get_pessi() != 0.0 or o.get_pessi() != 0">
                                     <th style="text-align:center;">PESSI</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_pessi()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
                                 </tr>
                                 <tr>
-                                    <t t-if="o.get_fuel() != 0.0 or o.get_fuel() != 0">
                                     <th style="text-align:center;">Fuel Allowance</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_fuel()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
-                                    <t t-if="o.get_loan() != 0.0 or o.get_loan() != 0">
                                     <th style="text-align:center;">Advances / Loan</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_loan()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
                                 </tr>
                                 <tr>
-                                    <t t-if="o.get_car() != 0.0 or o.get_car() != 0">
                                     <th style="text-align:center;">Car Monetization Allowance</th>
                                     <td style="text-align:left;">
-                                        <span  t-esc="o.get_car()"/>
+                                        <span t-esc="o.get_car()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
-                                    <t t-if="o.get_lwop() != 0.0 or o.get_lwop() != 0">
                                     <th style="text-align:center;">Leaves without Pay</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_lwop()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
                                 </tr>
                                 <tr>
-                                    <t t-if="o.get_driver() != 0.0 or o.get_driver() != 0">
                                     <th style="text-align:center;">Driver Allowance</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_driver()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
-                                    <t t-if="o.get_otherded() != 0.0 or o.get_otherded() != 0">
                                     <th style="text-align:center;">Others</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_otherded()"/>
                                     </td>
-                                     </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
                                 </tr>
                                 <tr>
-                                    <t t-if="o.get_otherded() != 0.0 or o.get_otherded() != 0">
                                     <th style="text-align:center;">Meal Allowance</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_meal()"/>
                                     </td>
                                     <th/>
-                                     </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
-                                    <th style="text-align:left;"/>
                                     <td style="text-align:left;"/>
                                 </tr>
                                 <tr>
-                                    <t t-if="o.get_overtime() != 0.0 or o.get_overtime() != 0">
                                     <th style="text-align:center;">Over Time</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_overtime()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
                                     <th/>
                                     <td style="text-align:left;"/>
                                 </tr>
@@ -295,92 +175,44 @@
                                     <td/>
                                 </tr>
                                 <tr>
-                                    <t t-if="o.get_arears() != 0.0 or o.get_arears() != 0">
                                     <th style="text-align:center;">Arears / Reimbursements</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_arears()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
                                     <th/>
                                     <td/>
                                 </tr>
                                 <tr>
-                                    <t t-if="o.get_otheral() != 0.0 or o.get_otheral() != 0">
                                     <th style="text-align:center;">Others</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_otheral()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
-                                    <t t-if="o.get_deductions() != 0.0 or o.get_deductions() != 0">
                                     <th style="text-align:center;">Total Deductions</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_deductions()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
                                 </tr>
                                 <tr>
-                                    <t t-if="o.get_bonus() != 0.0 or o.get_bonus() != 0">
                                     <th style="text-align:center;">Bonus</th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_bonus()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
                                     <th/>
                                     <td/>
                                 </tr>
                                 <tr>
-                                    <t t-if="o.get_gross() != 0.0 or o.get_gross() != 0">
                                     <th style="text-align:center;">
                                         <strong>Gross Salary</strong>
                                     </th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_gross()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
-                                    <t t-if="o.get_net() != 0.0 or o.get_net() != 0">
                                     <th style="text-align:center;">
                                         <strong>Net Salary</strong>
                                     </th>
                                     <td style="text-align:left;">
                                         <span t-esc="o.get_net()"/>
                                     </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="text-align:center;">
-                                            <span>&#160;</span>
-                                        </td>
-                                        <td style="text-align:left;"/>
-                                    </t>
                                 </tr>
                             </tbody>
                         </table>
