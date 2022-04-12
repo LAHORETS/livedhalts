@@ -22,9 +22,9 @@
                 <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
             </xpath>
 
-            <xpath expr="//field[@name='reminder_date_before_receipt']" position="attributes">
-                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
-            </xpath>
+<!--            <xpath expr="//field[@name='reminder_date_before_receipt']" position="attributes">-->
+<!--                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>-->
+<!--            </xpath>-->
 
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
