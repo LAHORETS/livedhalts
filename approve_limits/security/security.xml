@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="main_approve_limit_category" model="ir.module.category" >
+		<field name="name">Approve Limits Security</field>
+		<field name="description">Helps you to approve Documents with Balances.</field>
+	</record>
+
+	<record id="group_approve_limit_manager" model="res.groups">
+		<field name="name">Manager Approval</field>
+		<field name="category_id" ref="main_approve_limit_category"/>
+	</record>
+
+	<record id="group_approve_limit_cfo" model="res.groups">
+		<field name="name">CFO Approval</field>
+		<field name="category_id" ref="main_approve_limit_category"/>
+	</record>
+
+</odoo>
