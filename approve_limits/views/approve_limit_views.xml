@@ -139,7 +139,7 @@
         <field name="inherit_id" ref="account.view_account_payment_form"/>
         <field name="arch" type="xml">
 
-            <xpath expr="//header/button[@name='action_post']" position="after">
+            <xpath expr="//header/button[@name='post']" position="after">
 
                 <button name="button_manager_approve"
                         type="object"
