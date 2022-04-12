@@ -1,0 +1,181 @@
+<odoo>
+
+    <record id="view_purchase_order_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='order_line']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='date_planned']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='company_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='reminder_date_before_receipt']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='currency_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='date_order']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='receipt_reminder_email']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='fiscal_position_id']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '!=', 'draft')]}</attribute>
+            </xpath>
+
+            <xpath expr="//header/button[@name='action_rfq_send']" position="after">
+
+                <button name="button_manager_approve"
+                        type="object"
+                        string="Approve"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'manager_approve')]}"
+                        groups="approve_limits.group_approve_limit_manager"
+                />
+
+                <button name="button_manager_reject"
+                        type="object"
+                        string="Reject"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'manager_approve')]}"
+                        groups="approve_limits.group_approve_limit_manager"
+                />
+
+            </xpath>
+
+            <xpath expr="//header/button[@name='action_rfq_send']" position="after">
+
+                <button name="button_cfo_approved"
+                        type="object"
+                        string="Approve"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'cfo_approve')]}"
+                        groups="approve_limits.group_approve_limit_cfo"
+                />
+
+                <button name="button_cfo_reject"
+                        type="object"
+                        string="Reject"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'cfo_approve')]}"
+                        groups="approve_limits.group_approve_limit_cfo"
+                />
+
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_account_move_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header/button[@name='button_cancel']" position="after">
+
+                <button name="button_manager_approve"
+                        type="object"
+                        string="Approve"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'manager_approve')]}"
+                        groups="approve_limits.group_approve_limit_manager"
+                />
+
+                <button name="button_manager_reject"
+                        type="object"
+                        string="Reject"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'manager_approve')]}"
+                        groups="approve_limits.group_approve_limit_manager"
+                />
+
+                <button name="button_cfo_approved"
+                        type="object"
+                        string="Approve"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'cfo_approve')]}"
+                        groups="approve_limits.group_approve_limit_cfo"
+                />
+
+                <button name="button_cfo_reject"
+                        type="object"
+                        string="Reject"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'cfo_approve')]}"
+                        groups="approve_limits.group_approve_limit_cfo"
+                />
+
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_form_inherit" model="ir.ui.view">
+        <field name="name">view.account.payment.form.inherit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header/button[@name='action_post']" position="after">
+
+                <button name="button_manager_approve"
+                        type="object"
+                        string="Approve"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'manager_approve')]}"
+                        groups="approve_limits.group_approve_limit_manager"
+                />
+
+                <button name="button_manager_reject"
+                        type="object"
+                        string="Reject"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'manager_approve')]}"
+                        groups="approve_limits.group_approve_limit_manager"
+                />
+
+                <button name="button_cfo_approved"
+                        type="object"
+                        string="Approve"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'cfo_approve')]}"
+                        groups="approve_limits.group_approve_limit_cfo"
+                />
+
+                <button name="button_cfo_reject"
+                        type="object"
+                        string="Reject"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'cfo_approve')]}"
+                        groups="approve_limits.group_approve_limit_cfo"
+                />
+
+             </xpath>
+
+        </field>
+    </record>
+
+</odoo>
