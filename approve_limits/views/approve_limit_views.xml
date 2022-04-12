@@ -38,13 +38,13 @@
                 <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
             </xpath>
 
-            <xpath expr="//field[@name='receipt_reminder_email']" position="attributes">
-                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
-            </xpath>
+<!--            <xpath expr="//field[@name='receipt_reminder_email']" position="attributes">-->
+<!--                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>-->
+<!--            </xpath>-->
 
-            <xpath expr="//field[@name='fiscal_position_id']" position="attributes">
-                <attribute name="attrs">{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '!=', 'draft')]}</attribute>
-            </xpath>
+<!--            <xpath expr="//field[@name='fiscal_position_id']" position="attributes">-->
+<!--                <attribute name="attrs">{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '!=', 'draft')]}</attribute>-->
+<!--            </xpath>-->
 
             <xpath expr="//header/button[@name='action_rfq_send']" position="after">
 
