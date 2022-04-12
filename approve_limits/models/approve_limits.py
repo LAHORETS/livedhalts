@@ -142,12 +142,12 @@ class AccountPaymentInherit(models.Model):
             })
 
     def button_manager_approve(self):
-        self.post()
+        self.pay_post()
         # res = super(AccountPaymentInherit, self).post()
         # return res
 
     def button_cfo_approved(self):
-        self.post()
+        self.pay_post()
         # res = super(AccountPaymentInherit, self).post()
         # return res
 
@@ -161,7 +161,7 @@ class AccountPaymentInherit(models.Model):
             'state': 'reject'
         })
 
-    def post(self):
+    def pay_post(self):
         """ Create the journal items for the payment and update the payment's state to 'posted'.
             A journal entry is created containing an item in the source liquidity account (selected journal's default_debit or default_credit)
             and another in the destination reconcilable account (see _compute_destination_account_id).
