@@ -48,29 +48,21 @@
 
             <xpath expr="//header/button[@name='action_rfq_send']" position="after">
 
-                <button name="button_to_review"
+                <button name="button_manager_approve"
                         type="object"
-                        string="Review"
+                        string="Approve"
                         class="oe_highlight"
-                        attrs="{'invisible': [('state', '!=', 'to_review')]}"
-                        groups="approve_limits.group_to_review"
+                        attrs="{'invisible': [('state', '!=', 'manager_approve')]}"
+                        groups="approve_limits.group_approve_limit_manager"
                 />
 
-                <button name="button_tax_review"
+                <button name="button_manager_reject"
                         type="object"
-                        string="Tax Review"
+                        string="Reject"
                         class="oe_highlight"
-                        attrs="{'invisible': [('state', '!=', 'tax_review')]}"
-                        groups="approve_limits.group_tax_review"
+                        attrs="{'invisible': [('state', '!=', 'manager_approve')]}"
+                        groups="approve_limits.group_approve_limit_manager"
                 />
-
-<!--                <button name="button_manager_reject"-->
-<!--                        type="object"-->
-<!--                        string="Reject"-->
-<!--                        class="oe_highlight"-->
-<!--                        attrs="{'invisible': [('state', '!=', 'manager_approve')]}"-->
-<!--                        groups="approve_limits.group_approve_limit_manager"-->
-<!--                />-->
 
             </xpath>
 
@@ -97,55 +89,6 @@
         </field>
     </record>
 
-    <record id="view_sale_order_form_inherit" model="ir.ui.view">
-        <field name="name">sale.order.form.inherit</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
-        <field name="arch" type="xml">
-
-            <xpath expr="//header/button[@name='action_confirm']" position="after">
-
-                <button name="button_to_review"
-                        type="object"
-                        string="Review"
-                        class="oe_highlight"
-                        attrs="{'invisible': [('state', '!=', 'to_review')]}"
-                        groups="approve_limits.group_to_review_sale"
-                />
-
-                <button name="button_tax_review"
-                        type="object"
-                        string="Tax Review"
-                        class="oe_highlight"
-                        attrs="{'invisible': [('state', '!=', 'tax_review')]}"
-                        groups="approve_limits.button_tax_review_sale"
-                />
-
-            </xpath>
-
-            <xpath expr="//header/button[@name='action_confirm']" position="after">
-
-                <button name="button_cfo_approved"
-                        type="object"
-                        string="Approve"
-                        class="oe_highlight"
-                        attrs="{'invisible': [('state', '!=', 'cfo_approve')]}"
-                        groups="approve_limits.group_approve_limit_cfo_sale"
-                />
-
-                <button name="button_cfo_reject"
-                        type="object"
-                        string="Reject"
-                        class="oe_highlight"
-                        attrs="{'invisible': [('state', '!=', 'cfo_approve')]}"
-                        groups="approve_limits.group_approve_limit_cfo_sale"
-                />
-
-            </xpath>
-
-        </field>
-    </record>
-
     <record id="view_account_move_form_inherit" model="ir.ui.view">
         <field name="name">account.move.form.inherit</field>
         <field name="model">account.move</field>
@@ -154,12 +97,28 @@
 
             <xpath expr="//header/button[@name='button_cancel']" position="after">
 
+                <button name="button_manager_approve"
+                        type="object"
+                        string="Approve"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'manager_approve')]}"
+                        groups="approve_limits.group_approve_limit_manager"
+                />
+
+                <button name="button_manager_reject"
+                        type="object"
+                        string="Reject"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'manager_approve')]}"
+                        groups="approve_limits.group_approve_limit_manager"
+                />
+
                 <button name="button_cfo_approved"
                         type="object"
                         string="Approve"
                         class="oe_highlight"
                         attrs="{'invisible': [('state', '!=', 'cfo_approve')]}"
-                        groups="approve_limits.group_approve_limit_cfo_move"
+                        groups="approve_limits.group_approve_limit_cfo"
                 />
 
                 <button name="button_cfo_reject"
@@ -167,23 +126,7 @@
                         string="Reject"
                         class="oe_highlight"
                         attrs="{'invisible': [('state', '!=', 'cfo_approve')]}"
-                        groups="approve_limits.group_approve_limit_cfo_move"
-                />
-
-                <button name="button_to_review"
-                        type="object"
-                        string="Review"
-                        class="oe_highlight"
-                        attrs="{'invisible': [('state', '!=', 'to_review')]}"
-                        groups="approve_limits.group_to_review_move"
-                />
-
-                <button name="button_tax_review"
-                        type="object"
-                        string="Tax Review"
-                        class="oe_highlight"
-                        attrs="{'invisible': [('state', '!=', 'tax_review')]}"
-                        groups="approve_limits.button_tax_review_move"
+                        groups="approve_limits.group_approve_limit_cfo"
                 />
 
             </xpath>
@@ -198,12 +141,20 @@
 
             <xpath expr="//header/button[@name='post']" position="after">
 
-                <button name="button_to_review"
+                <button name="button_manager_approve"
                         type="object"
-                        string="Review"
+                        string="Approve"
                         class="oe_highlight"
-                        attrs="{'invisible': [('state', '!=', 'to_review')]}"
-                        groups="approve_limits.button_review_payment"
+                        attrs="{'invisible': [('state', '!=', 'manager_approve')]}"
+                        groups="approve_limits.group_approve_limit_manager"
+                />
+
+                <button name="button_manager_reject"
+                        type="object"
+                        string="Reject"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'manager_approve')]}"
+                        groups="approve_limits.group_approve_limit_manager"
                 />
 
                 <button name="button_cfo_approved"
@@ -211,7 +162,7 @@
                         string="Approve"
                         class="oe_highlight"
                         attrs="{'invisible': [('state', '!=', 'cfo_approve')]}"
-                        groups="approve_limits.group_approve_limit_payment"
+                        groups="approve_limits.group_approve_limit_cfo"
                 />
 
                 <button name="button_cfo_reject"
@@ -219,7 +170,7 @@
                         string="Reject"
                         class="oe_highlight"
                         attrs="{'invisible': [('state', '!=', 'cfo_approve')]}"
-                        groups="approve_limits.group_approve_limit_payment"
+                        groups="approve_limits.group_approve_limit_cfo"
                 />
 
              </xpath>
