@@ -14,8 +14,9 @@ class PurchaseOrderInherit(models.Model):
     state = fields.Selection([
         ('draft', 'RFQ'),
         ('sent', 'RFQ Sent'),
-        ('manager_approve', 'Waiting For Manager Approval'),
-        ('cfo_approve', 'Waiting For CFO Approval'),
+        ('to_review', 'Waiting For Review Approval'),
+        ('tax_review', 'Waiting For Tax Review Approval'),
+        ('cfo_approve', 'Waiting For Approval'),
         ('to approve', 'To Approve'),
         ('purchase', 'Purchase Order'),
         ('done', 'Locked'),
@@ -24,30 +25,30 @@ class PurchaseOrderInherit(models.Model):
     ], string='Status', readonly=True, index=True, copy=False, default='draft', tracking=True)
 
     def button_confirm(self):
-        if self.amount_total < 100000:
+        if self.amount_tax > 0:
             self.write({
-                'state': 'manager_approve'
+                'state': 'tax_review'
             })
-        elif self.amount_total >= 100000:
+        elif self.amount_tax == 0:
             self.write({
-                'state': 'cfo_approve'
+                'state': 'to_review'
             })
 
-    def button_manager_approve(self):
-        for order in self:
-            if order.state not in ['draft', 'sent','manager_approve']:
-                continue
-            order._add_supplier_to_product()
-            # Deal with double validation process
-            if order.company_id.po_double_validation == 'one_step'\
-                    or (order.company_id.po_double_validation == 'two_step'\
-                        and order.amount_total < self.env.company.currency_id._convert(
-                            order.company_id.po_double_validation_amount, order.currency_id, order.company_id, order.date_order or fields.Date.today()))\
-                    or order.user_has_groups('purchase.group_purchase_manager'):
-                order.button_approve()
-            else:
-                order.write({'state': 'to approve'})
-        return True
+    # def button_manager_approve(self):
+    #     for order in self:
+    #         if order.state not in ['draft', 'sent','manager_approve']:
+    #             continue
+    #         order._add_supplier_to_product()
+    #         # Deal with double validation process
+    #         if order.company_id.po_double_validation == 'one_step'\
+    #                 or (order.company_id.po_double_validation == 'two_step'\
+    #                     and order.amount_total < self.env.company.currency_id._convert(
+    #                         order.company_id.po_double_validation_amount, order.currency_id, order.company_id, order.date_order or fields.Date.today()))\
+    #                 or order.user_has_groups('purchase.group_purchase_manager'):
+    #             order.button_approve()
+    #         else:
+    #             order.write({'state': 'to approve'})
+    #     return True
 
     def button_cfo_approved(self):
         for order in self:
@@ -65,9 +66,60 @@ class PurchaseOrderInherit(models.Model):
                 order.write({'state': 'to approve'})
         return True
 
-    def button_manager_reject(self):
+    def button_to_review(self):
+        self.write({
+            'state': 'cfo_approve'
+        })
+
+    def button_tax_review(self):
+        self.write({
+            'state': 'cfo_approve'
+        })
+
+    def button_cfo_reject(self):
         self.write({
             'state': 'reject'
+        })
+
+
+class SaleOrderInherit(models.Model):
+    _inherit = 'sale.order'
+
+    state = fields.Selection([
+        ('draft', 'Quotation'),
+        ('sent', 'Quotation Sent'),
+        ('to_review', 'Waiting For Review Approval'),
+        ('tax_review', 'Waiting For Tax Review Approval'),
+        ('cfo_approve', 'Waiting For Approval'),
+        ('sale', 'Sales Order'),
+        ('reject', 'Reject'),
+        ('done', 'Locked'),
+        ('cancelled', 'Cancelled'),
+        ('cancel', 'Cancelled'),
+    ], string='Status', readonly=True, copy=False, index=True, tracking=3, default='draft')
+
+    def action_confirm(self):
+        if self.amount_tax > 0:
+            self.write({
+                'state': 'tax_review'
+            })
+        elif self.amount_tax == 0:
+            self.write({
+                'state': 'to_review'
+            })
+
+    def button_cfo_approved(self):
+        rec = super(SaleOrderInherit, self).action_confirm()
+        return rec
+
+    def button_to_review(self):
+        self.write({
+            'state': 'cfo_approve'
+        })
+
+    def button_tax_review(self):
+        self.write({
+            'state': 'cfo_approve'
         })
 
     def button_cfo_reject(self):
@@ -81,34 +133,36 @@ class AccountMoveInherit(models.Model):
 
     state = fields.Selection(selection=[
         ('draft', 'Draft'),
-        ('manager_approve', 'Waiting For Manager Approval'),
-        ('cfo_approve', 'Waiting For CFO Approval'),
+        ('to_review', 'Waiting For Review Approval'),
+        ('tax_review', 'Waiting For Tax Review Approval'),
+        ('cfo_approve', 'Waiting For Approval'),
         ('posted', 'Posted'),
         ('cancel', 'Cancelled'),
         ('reject', 'Rejected'),
     ], string='Status', required=True, readonly=True, copy=False, tracking=True, default='draft')
 
     def action_post(self):
-        if self.amount_total < 100000:
+        if self.total_tax_amount > 0:
             self.write({
-                'state': 'manager_approve'
+                'state': 'tax_review'
             })
-        elif self.amount_total >= 100000:
+        elif self.total_tax_amount == 0:
             self.write({
-                'state': 'cfo_approve'
+                'state': 'to_review'
             })
-
-    def button_manager_approve(self):
-        res = super(AccountMoveInherit, self).action_post()
-        return res
 
     def button_cfo_approved(self):
-        res = super(AccountMoveInherit, self).action_post()
-        return res
+        rec = super(AccountMoveInherit, self).action_post()
+        return rec
 
-    def button_manager_reject(self):
+    def button_to_review(self):
         self.write({
-            'state': 'reject'
+            'state': 'cfo_approve'
+        })
+
+    def button_tax_review(self):
+        self.write({
+            'state': 'cfo_approve'
         })
 
     def button_cfo_reject(self):
@@ -122,8 +176,8 @@ class AccountPaymentInherit(models.Model):
 
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('manager_approve', 'Waiting For Manager Approval'),
-        ('cfo_approve', 'Waiting For CFO Approval'),
+        ('to_review', 'Waiting For Review'),
+        ('cfo_approve', 'Waiting For Approval'),
         ('posted', 'Validated'),
         ('sent', 'Sent'),
         ('reconciled', 'Reconciled'),
@@ -132,17 +186,14 @@ class AccountPaymentInherit(models.Model):
     ], readonly=True, default='draft', copy=False, string="Status")
 
     def post(self):
-        if self.amount < 100000:
-            self.write({
-                'state': 'manager_approve'
-            })
-        elif self.amount >= 100000:
-            self.write({
-                'state': 'cfo_approve'
-            })
+        self.write({
+            'state': 'to_review'
+        })
 
-    def button_manager_approve(self):
-        self.pay_post()
+    def button_to_review(self):
+        self.write({
+            'state': 'cfo_approve'
+        })
         # res = super(AccountPaymentInherit, self).post()
         # return res
 
@@ -150,11 +201,6 @@ class AccountPaymentInherit(models.Model):
         self.pay_post()
         # res = super(AccountPaymentInherit, self).post()
         # return res
-
-    def button_manager_reject(self):
-        self.write({
-            'state': 'reject'
-        })
 
     def button_cfo_reject(self):
         self.write({
