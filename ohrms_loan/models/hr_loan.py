@@ -27,6 +27,7 @@ class HrLoan(models.Model):
             for line in loan.loan_lines:
                 if line.paid:
                     total_paid += line.amount
+            print(total_paid)
             balance_amount = loan.loan_amount - total_paid
             loan.total_amount = loan.loan_amount
             loan.balance_amount = balance_amount
@@ -50,10 +51,10 @@ class HrLoan(models.Model):
     job_position = fields.Many2one('hr.job', related="employee_id.job_id", readonly=True, string="Job Position",
                                    help="Job position")
     loan_amount = fields.Float(string="Loan Amount", required=True, help="Loan amount")
-    total_amount = fields.Float(string="Total Amount", store=True, readonly=True, compute='_compute_loan_amount',
+    total_amount = fields.Float(string="Total Amount", readonly=True, compute='_compute_loan_amount',
                                 help="Total loan amount")
-    balance_amount = fields.Float(string="Balance Amount", store=True, compute='_compute_loan_amount', help="Balance amount")
-    total_paid_amount = fields.Float(string="Total Paid Amount", store=True, compute='_compute_loan_amount',
+    balance_amount = fields.Float(string="Balance Amount", compute='_compute_loan_amount', help="Balance amount")
+    total_paid_amount = fields.Float(string="Total Paid Amount", compute='_compute_loan_amount',
                                      help="Total paid amount")
 
     state = fields.Selection([

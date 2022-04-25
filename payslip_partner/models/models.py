@@ -14,7 +14,9 @@ class AccountMoveInh(models.Model):
             slip = self.env['hr.payslip'].search([('number', '=', self.ref)])
             if slip:
                 slip.loan_line.status = 'paid'
+                slip.loan_line.paid = True
                 slip.loan_line.paid_on = datetime.today()
+                slip.loan_line.paid_amount = slip.loan_line.amount
         return super(AccountMoveInh, self).action_post()
 
 
@@ -85,6 +87,7 @@ class HrLoanLineInh(models.Model):
     _inherit = 'hr.loan.line'
 
     paid_on = fields.Date()
+    paid_amount = fields.Float()
     status = fields.Selection([
         ('unpaid', 'Unpaid'),
         ('paid', 'Paid'),

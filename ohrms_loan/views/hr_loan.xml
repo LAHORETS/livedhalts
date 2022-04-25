@@ -9,8 +9,9 @@
             <tree string="Loan Requests">
                 <field name="name"/>
                 <field name="employee_id"/>
-                <field name="loan_amount"/>
                 <field name="date"/>
+                <field name="loan_amount"/>
+                <field name="balance_amount"/>
                 <field name="state"/>
             </tree>
         </field>

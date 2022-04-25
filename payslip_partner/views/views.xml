@@ -60,6 +60,7 @@
 
                 <xpath expr="//field[@name='loan_lines']/tree/field[@name='amount']" position="after">
                     <field name="paid_on" readonly="1"/>
+                    <field name="paid_amount"/>
                     <field name="status" readonly="1"/>
                 </xpath>
 
