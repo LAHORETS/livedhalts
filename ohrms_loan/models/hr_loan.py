@@ -56,7 +56,6 @@ class HrLoan(models.Model):
     balance_amount = fields.Float(string="Balance Amount", compute='_compute_loan_amount', help="Balance amount")
     total_paid_amount = fields.Float(string="Total Paid Amount", compute='_compute_loan_amount',
                                      help="Total paid amount")
-
     state = fields.Selection([
         ('draft', 'Draft'),
         ('waiting_approval_1', 'Submitted'),
@@ -64,6 +63,64 @@ class HrLoan(models.Model):
         ('refuse', 'Refused'),
         ('cancel', 'Canceled'),
     ], string="State", default='draft', track_visibility='onchange', copy=False, )
+    journal_id = fields.Many2one('account.journal')
+    is_payment_created = fields.Boolean('Is Created', default=False)
+    move_id = fields.Many2one('account.move')
+
+    def action_view_entry(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'binding_type': 'object',
+            'domain': [('ref', '=', self.name)],
+            'target': 'current',
+            'name': 'Journal Item',
+            'res_model': 'account.move',
+            'view_mode': 'tree,form',
+        }
+
+    def action_create_payment(self):
+        self._action_general_entry()
+
+    def _action_general_entry(self):
+        line_ids = []
+        debit_sum = 0.0
+        credit_sum = 0.0
+        for rec in self:
+            if not rec.journal_id:
+                raise UserError('Please Select Journal.')
+            debit_account = self.env['account.account'].search([('name', '=', 'Loan against PF')])
+            move_dict = {
+                'ref': rec.name,
+                'journal_id': rec.journal_id.id,
+                'partner_id': rec.employee_id.address_home_id.id,
+                'date': datetime.today(),
+                'state': 'draft',
+            }
+            debit_line = (0, 0, {
+                'name': 'Loan Against PF',
+                'debit': abs(rec.loan_amount),
+                'credit': 0.0,
+                'partner_id': rec.employee_id.address_home_id.id,
+                'account_id': debit_account.id,
+            })
+            line_ids.append(debit_line)
+            debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
+            credit_line = (0, 0, {
+                'name': 'Loan Against PF',
+                'debit': 0.0,
+                'partner_id': rec.employee_id.address_home_id.id,
+                'credit': abs(rec.loan_amount),
+                'account_id': rec.journal_id.default_credit_account_id.id,
+            })
+            line_ids.append(credit_line)
+            credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
+
+            move_dict['line_ids'] = line_ids
+            move = self.env['account.move'].create(move_dict)
+            line_ids = []
+            rec.is_payment_created = True
+            rec.move_id = move.id
+            print("General entry created")
 
     @api.model
     def create(self, values):

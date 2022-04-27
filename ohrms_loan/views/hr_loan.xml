@@ -132,6 +132,7 @@
         <field name="binding_model_id" ref="hr.model_hr_employee"/>
         <field name="view_mode">tree,form</field>
         <field name="context">{'search_default_myloan': 1}</field>
+        <field name="domain">[('employee_id', '=', active_id)]</field>
         <field name="view_id" eval="hr_loan_tree_view"/>
     </record>
 
