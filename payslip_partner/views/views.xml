@@ -1,0 +1,80 @@
+<odoo>
+    <data>
+
+        <record id="view_hr_employee_inh" model="ir.ui.view">
+            <field name="name">hr.employee.form.inh</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button class="oe_stat_button" icon="fa-plus">
+                         <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="employer_cont" />
+                            </span>
+                            <span class="o_stat_text">
+                                PF(Employer)
+                            </span>
+                        </div>
+                    </button>
+                    <button class="oe_stat_button" icon="fa-plus">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="employee_cont"/>
+                            </span>
+                            <span class="o_stat_text">
+                                PF(Employee)
+                            </span>
+                        </div>
+                    </button>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <record id="view_hr_payslip_inh" model="ir.ui.view">
+            <field name="name">hr.payslip.form.inh</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='number']" position="after">
+                    <field name="loan_amount" invisible="1"/>
+                    <field name="loan_line" invisible="1"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_hr_loan_inh" model="ir.ui.view">
+            <field name="name">hr.loan.form.inh</field>
+            <field name="model">hr.loan</field>
+            <field name="inherit_id" ref="ohrms_loan.hr_loan_form_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button type="object" name="action_view_entry" class="oe_stat_button" icon="fa-usd" string="Journal Entry" attrs="{'invisible': [('is_payment_created', '=', False)]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='loan_lines']/tree/field[@name='amount']" position="after">
+                    <field name="paid_on" readonly="1"/>
+                    <field name="paid_amount"/>
+                    <field name="status" readonly="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="journal_id"/>
+                    <field name="is_payment_created" invisible="1"/>
+                    <field name="move_id" readonly="1"/>
+                </xpath>
+
+                <xpath expr="//header" position="inside">
+                    <button string="Create Payment" type="object" name="action_create_payment" attrs="{'invisible': ['|',('is_payment_created', '=', True), ('state', '!=', 'approve')]}"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
