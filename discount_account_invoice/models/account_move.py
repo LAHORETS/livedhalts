@@ -327,16 +327,17 @@ class AccountMove(models.Model):
             self.general_entry('Sales Tax Current Asset', 'Sales Tax Payable', sale_current_asset, sale_payable,
                                total_sale_tax, ref, journal,sales_partner )
 
-        # if self.case5 == True:
-        #     journal = self.env['account.journal'].search([('name', 'ilike', 'Miscellaneous Operations')])[0]
-        #     sales_partner = self.env['res.partner'].search([('name', 'ilike', 'Sales Tax Payable')], limit=1)
-        #     ref = self.name
-        #     sale_current_asset = self.env['account.account'].search([('name', '=', 'Sales Tax Current Asset')])[0]
-        #     sale_payable = self.env['account.account'].search([('name', '=', 'Sales Tax Payable')])[0]
-        #     total_sale_tax = self.after_tax_wht
-        #
-        #     self.general_entry('Sales Tax Current Asset', 'Sales Tax Payable', sale_current_asset, sale_payable,
-        #                        total_sale_tax, ref, journal, sales_partner)
+        if self.case5 == True:
+            print('jjjj')
+            journal = self.env['account.journal'].search([('name', 'ilike', 'Miscellaneous Operations')])[0]
+            sales_partner = self.env['res.partner'].search([('name', 'ilike', 'Sales Tax Payable')], limit=1)
+            ref = self.name
+            sale_current_asset = self.env['account.account'].search([('name', '=', 'Sales Tax Current Asset')])[0]
+            sale_payable = self.env['account.account'].search([('name', '=', 'Sales Tax Payable')])[0]
+            total_sale_tax = self.after_tax_wht
+
+            self.general_entry('Sales Tax Current Asset', 'Sales Tax Payable', sale_current_asset, sale_payable,
+                               total_sale_tax, ref, journal, sales_partner)
 
     def action_create_line(self):
         product = self.env['product.product'].search([('name', '=', 'FBR')], limit=1)
@@ -353,7 +354,6 @@ class AccountMove(models.Model):
 
 
     def general_entry(self, name_first, name_second, account, account_2, amount, ref, journal,partner):
-
         line_ids = []
         debit_sum = 0.0
         credit_sum = 0.0
