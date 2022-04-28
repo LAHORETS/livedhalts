@@ -38,7 +38,7 @@ class AccountMove(models.Model):
     exempt = fields.Boolean("Exemption Certificate",related='partner_id.exempt')
     wth_amount = fields.Integer("WHT")
     after_wht = fields.Float("WHT Amt", compute="compute_after_WHT")
-    tax_amount = fields.Float("Tax %")
+    tax_amount = fields.Float("Sales Tax %")
     after_tax_wht = fields.Float("Tax Amt", compute="compute_after_tax_wht")
     grand_total = fields.Float("Grand Total", compute="compute_grand_total")
     case1 = fields.Boolean("Case 1", compute="compute_case_partner")
@@ -198,7 +198,7 @@ class AccountMove(models.Model):
             self.after_wht = total
 
         if self.case4 == True:
-            total = self.amount_untaxed + self.after_tax_wht
+            total = self.amount_untaxed + abs(self.after_tax_wht)
             self.after_wht = total *(self.wth_amount/100)
             self.global_order_discount = self.after_wht
 
@@ -228,13 +228,13 @@ class AccountMove(models.Model):
 
         if self.case4 == True:
             print("Case 4")
-            tax_amount = (self.amount_untaxed * ((self.tax_amount / 100)))
+            tax_amount = (self.grand_total * ((self.tax_amount / 100)))
             self.after_tax_wht = tax_amount
 
         if self.case5 == True:
             print("Case 5")
-            tax_amount = (self.amount_untaxed * ((self.tax_amount / 100)))
-            self.after_tax_wht = tax_amount
+            # tax_amount = (self.amount_untaxed * ((self.tax_amount / 100)))
+            self.after_tax_wht = self.total_tax_amount
 
     @api.depends("after_tax_wht",'global_discount_type',
                  'global_order_discount')
@@ -327,16 +327,16 @@ class AccountMove(models.Model):
             self.general_entry('Sales Tax Current Asset', 'Sales Tax Payable', sale_current_asset, sale_payable,
                                total_sale_tax, ref, journal,sales_partner )
 
-        if self.case5 == True:
-            journal = self.env['account.journal'].search([('name', 'ilike', 'Miscellaneous Operations')])[0]
-            sales_partner = self.env['res.partner'].search([('name', 'ilike', 'Sales Tax Payable')], limit=1)
-            ref = self.name
-            sale_current_asset = self.env['account.account'].search([('name', '=', 'Sales Tax Current Asset')])[0]
-            sale_payable = self.env['account.account'].search([('name', '=', 'Sales Tax Payable')])[0]
-            total_sale_tax = self.after_tax_wht
-
-            self.general_entry('Sales Tax Current Asset', 'Sales Tax Payable', sale_current_asset, sale_payable,
-                               total_sale_tax, ref, journal, sales_partner)
+        # if self.case5 == True:
+        #     journal = self.env['account.journal'].search([('name', 'ilike', 'Miscellaneous Operations')])[0]
+        #     sales_partner = self.env['res.partner'].search([('name', 'ilike', 'Sales Tax Payable')], limit=1)
+        #     ref = self.name
+        #     sale_current_asset = self.env['account.account'].search([('name', '=', 'Sales Tax Current Asset')])[0]
+        #     sale_payable = self.env['account.account'].search([('name', '=', 'Sales Tax Payable')])[0]
+        #     total_sale_tax = self.after_tax_wht
+        #
+        #     self.general_entry('Sales Tax Current Asset', 'Sales Tax Payable', sale_current_asset, sale_payable,
+        #                        total_sale_tax, ref, journal, sales_partner)
 
     def action_create_line(self):
         product = self.env['product.product'].search([('name', '=', 'FBR')], limit=1)
@@ -391,6 +391,7 @@ class AccountMove(models.Model):
                 'auto_post': True,
             }
             move = self.env['account.move'].create(vals)
+            print("Journal entry created")
 
     def _recompute_tax_lines(self, recompute_tax_base_amount=False):
         ''' Compute the dynamic tax lines of the journal entry.
@@ -608,6 +609,7 @@ class AccountMove(models.Model):
                  'line_ids.payment_id.state', 'global_discount_type',
                  'global_order_discount')
     def _compute_amount(self):
+        print("working")
         invoice_ids = [
             move.id for move in self
             if move.id and move.is_invoice(include_receipts=True)
@@ -732,7 +734,7 @@ class AccountMove(models.Model):
 
     total_global_discount = fields.Monetary(string='Total Income Tax',
         store=True, readonly=True, default=0, compute='_compute_amount')
-    total_discount = fields.Monetary(string='Income Tax Payalbe', store=True,
+    total_discount = fields.Monetary(string='Income Tax Payable', store=True,
         readonly=True, default=0, compute='_compute_amount', tracking=True)
     global_discount_type = fields.Selection([('fixed', 'Percent'),
                                              ('percent', 'Fixed')],

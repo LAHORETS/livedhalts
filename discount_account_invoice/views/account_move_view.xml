@@ -69,7 +69,7 @@
                             <field name="case_3_5" invisible="1"/>
                             <field name="total_tax_amount" invisible="0"/>
                             <field name="wth_amount" attrs="{'required':[('case','=',True)]}"/>
-                            <field name="tax_amount" attrs="{'invisible':[('case_3_5','=',True)]}"/>
+                            <field name="tax_amount" />
                             <field name="total_discount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             <field name="after_wht" invisible="0"/>
                             <field name="after_tax_wht" invisible="0"/>
@@ -90,12 +90,12 @@
                     <field name="discount_type" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='tax_ids']" position="after">
-                    <field name="tax_amount" invisible="1"/>
+                    <field name="tax_amount" invisible="0"/>
                     <field name="case_state" invisible="0"/>
                 </xpath>
 
                    <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='tax_ids']" position="attributes">
-                  <attribute name="attrs">{'required': [('case_state','in',['3','5'])]}</attribute>
+                  <attribute name="attrs">{'required': [('case_state','in',['3'])]}</attribute>
               </xpath>
             </field>
         </record>

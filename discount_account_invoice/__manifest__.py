@@ -3,7 +3,7 @@
   "name"                 :  "Income Tax On Invoices And Bills",
   "summary"              :  """Income Tax on invoice/bill lines and invoices/bills along with fixed and percentage Income Tax""",
   "category"             :  "Accounting",
-  "version"              :  "1.1.1",
+  "version"              :  "1.1.4",
   "sequence"             :  1,
   "author"               :  "Webkul Software Pvt. Ltd.",
   "license"              :  "Other proprietary",
