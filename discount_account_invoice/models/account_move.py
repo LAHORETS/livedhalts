@@ -1,10 +1,11 @@
-
 import logging
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
+
+
 class FbrTaxesPartner(models.Model):
     _inherit = 'res.partner'
 
@@ -15,27 +16,28 @@ class FbrTaxesPartner(models.Model):
                                            ("register", "Register")], default="unregister", string="Tax type Scope")
 
     fbr_ntn_active = fields.Boolean("NTN IN Active")
-    fbr_stn_active = fields.Boolean("STN IN Active" )
+    fbr_stn_active = fields.Boolean("STN IN Active")
 
 
 class AccountPayment(models.Model):
     _inherit = 'res.partner'
 
-    partner_type=fields.Selection([("individual", "Individual"),
-                                           ("company", "Company"),("aop", "AOP")])
+    partner_type = fields.Selection([("individual", "Individual"),
+                                     ("company", "Company"), ("aop", "AOP")])
 
     @api.onchange('partner_type')
     def _onchange_company_type(self):
-        if self.partner_type =='individual' or 'aop':
-            self.company_type='person'
+        if self.partner_type == 'individual' or 'aop':
+            self.company_type = 'person'
         if self.partner_type == 'company':
             print("working")
             self.company_type = 'company'
 
+
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    exempt = fields.Boolean("Exemption Certificate",related='partner_id.exempt')
+    exempt = fields.Boolean("Exemption Certificate", related='partner_id.exempt')
     wth_amount = fields.Float("WHT")
     after_wht = fields.Float("WHT Amt", compute="compute_after_WHT")
     tax_amount = fields.Float("Sales Tax %")
@@ -43,7 +45,7 @@ class AccountMove(models.Model):
     grand_total = fields.Float("Grand Total", compute="compute_grand_total")
     case1 = fields.Boolean("Case 1", compute="compute_case_partner")
     case2 = fields.Boolean("Case 2", compute="compute_case_partner")
-    case3 = fields.Boolean("Case 3",compute="_check_case_3")
+    case3 = fields.Boolean("Case 3", compute="_check_case_3")
     case4 = fields.Boolean("Case 4")
     case5 = fields.Boolean("Case 5", compute="compute_case_partner")
     case = fields.Boolean("Case")
@@ -54,19 +56,20 @@ class AccountMove(models.Model):
     prodtotal = fields.Float("Total Product Amt")
     servicetotal = fields.Float("Total Service Amt")
     total_tax_amount = fields.Float("Total Tax Amt", compute="compute_total_tax")
-    case_state = fields.Selection([('1', '1'),('2', '2'),('3', '3'),('4', '4'),('5', '5')], string="Case State",readonly=True)
+    case_state = fields.Selection([('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], string="Case State",
+                                  readonly=True)
 
     @api.depends('invoice_line_ids.product_id')
     def _check_case_3(self):
         self.case3 = False
         self.case4 = False
         if self.partner_id.tax_type == "register" and self.partner_id.fbr_ntn == True:
-            if self.partner_id.fbr_stn == True and self.partner_id.fbr_stn_active ==True:
+            if self.partner_id.fbr_stn == True and self.partner_id.fbr_stn_active == True:
                 for line in self.invoice_line_ids:
                     if line.product_id.type != 'service':
                         print("case3--------> after")
                         self.case3 = True
-                        self.case_state="3"
+                        self.case_state = "3"
                         self.case4 = False
                         self.case5 = False
                         self.case1 = False
@@ -76,7 +79,7 @@ class AccountMove(models.Model):
                         if line.product_id.type == 'service':
                             self.case4 = True
                             self.case_state = "4"
-                            self.case5=False
+                            self.case5 = False
                             self.case3 = False
                             self.case1 = False
                             self.case2 = False
@@ -84,13 +87,12 @@ class AccountMove(models.Model):
             else:
                 self.case3 = False
 
-
     @api.depends("amount_untaxed")
     def compute_total_tax(self):
-      total=0
-      for i in self.invoice_line_ids:
-          total=total+i.tax_amount
-      self.total_tax_amount=total
+        total = 0
+        for i in self.invoice_line_ids:
+            total = total + i.tax_amount
+        self.total_tax_amount = total
 
     @api.depends("partner_id")
     def compute_fiscal_year(self):
@@ -101,15 +103,14 @@ class AccountMove(models.Model):
         for i in accobj:
             if i.state == "posted":
 
-                    if i.invoice_date >= fiscalObj.date_from and i.invoice_date <= fiscalObj.date_to:
-                        for k in i.invoice_line_ids:
-                            if k.product_id.type=="product":
-                                total = total + k.price_subtotal
-                            else:
-                                total1 = total1 + k.price_subtotal
+                if i.invoice_date >= fiscalObj.date_from and i.invoice_date <= fiscalObj.date_to:
+                    for k in i.invoice_line_ids:
+                        if k.product_id.type == "product":
+                            total = total + k.price_subtotal
+                        else:
+                            total1 = total1 + k.price_subtotal
         self.prodtotal = total
         self.servicetotal = total1
-
 
         if self.prodtotal >= 75000:
             self.income_tax = "yes"
@@ -117,12 +118,12 @@ class AccountMove(models.Model):
             self.income_tax = "no"
 
         if self.servicetotal >= 30000:
-            self.service_tax= "yes"
+            self.service_tax = "yes"
         else:
             self.service_tax = "no"
 
     def compute_count(self):
-        self.fbr_taxes=0
+        self.fbr_taxes = 0
         self.fbr_taxes = self.env['account.move'].search_count([('ref', '=', self.name)])
 
     @api.depends("partner_id")
@@ -132,7 +133,7 @@ class AccountMove(models.Model):
         self.case2 = False
         self.case5 = False
         self.case = False
-        if self.partner_id.fbr_stn == True  and self.partner_id.fbr_ntn == True:
+        if self.partner_id.fbr_stn == True and self.partner_id.fbr_ntn == True:
             if self.partner_id.tax_type == "unregister":
                 print("Case 1------------>")
                 self.case1 = True
@@ -168,7 +169,7 @@ class AccountMove(models.Model):
 
         if self.partner_id.tax_type == "register":
             if self.partner_id.fbr_stn == True and self.partner_id.fbr_ntn:
-                if  self.partner_id.fbr_ntn_active ==False and self.partner_id.fbr_stn_active ==False:
+                if self.partner_id.fbr_ntn_active == False and self.partner_id.fbr_stn_active == False:
                     print("Case 5")
                     self.case5 = True
                     self.case_state = "5"
@@ -177,53 +178,53 @@ class AccountMove(models.Model):
                     self.case = True
                     self.case_3_5 = True
 
-    @api.depends("wth_amount", "tax_amount", 'global_discount_type', 'global_order_discount','amount_tax')
+    @api.depends("wth_amount", "tax_amount", 'global_discount_type', 'global_order_discount', 'amount_tax')
     def compute_after_WHT(self):
         self.after_wht = 0
         if self.case1 == True:
             print("CASE WHT 1")
-            if self.global_discount_type == 'percent':
-                income_tax = (self.amount_untaxed * ((self.wth_amount/100)))
+            if self.global_discount_type == 'fixed':
+                income_tax = (self.amount_untaxed * ((self.wth_amount / 100)))
             else:
-                income_tax = (self.amount_untaxed * (self.wth_amount))
+                income_tax = self.wth_amount
             tax_amount = (self.amount_untaxed * ((self.tax_amount / 100)))
             self.after_wht = income_tax
             self.after_tax_wht = tax_amount
 
         if self.case2 == True:
-            print("CASE WHT calculation 2",self.tax_amount)
-            if self.global_discount_type == 'percent':
+            print("CASE WHT calculation 2", self.tax_amount)
+            if self.global_discount_type == 'fixed':
                 income_tax = (self.amount_untaxed * ((self.wth_amount / 100)))
             else:
-                income_tax = (self.amount_untaxed * (self.wth_amount))
+                income_tax = self.wth_amount
             self.after_wht = income_tax
             self.global_order_discount = self.after_wht
 
         if self.case3 == True:
-            if self.global_discount_type == 'percent':
-                total = (self.total_tax_amount +self.amount_untaxed) * (self.wth_amount/100)
+            if self.global_discount_type == 'fixed':
+                total = (self.total_tax_amount + self.amount_untaxed) * (self.wth_amount / 100)
             else:
-                total = (self.total_tax_amount + self.amount_untaxed) * (self.wth_amount)
+                total = self.wth_amount
             self.after_wht = total
 
         if self.case4 == True:
             total = self.amount_untaxed + abs(self.after_tax_wht)
-            if self.global_discount_type == 'percent':
-                self.after_wht = total *(self.wth_amount/100)
+            if self.global_discount_type == 'fixed':
+                self.after_wht = total * (self.wth_amount / 100)
             else:
-                self.after_wht = total * (self.wth_amount)
+                self.after_wht = self.wth_amount
             self.global_order_discount = self.after_wht
 
         if self.case5 == True:
             total = self.amount_untaxed + self.total_tax_amount
-            if self.global_discount_type == 'percent':
-                self.after_wht = total * (self.wth_amount/100)
+            if self.global_discount_type == 'fixed':
+                self.after_wht = total * (self.wth_amount / 100)
             else:
-                self.after_wht = total * (self.wth_amount)
+                self.after_wht = self.wth_amount
             self.global_order_discount = self.after_wht
 
     @api.depends("wth_amount", "tax_amount", 'global_discount_type',
-                 'global_order_discount','amount_tax')
+                 'global_order_discount', 'amount_tax')
     def compute_after_tax_wht(self):
         self.after_tax_wht = 0
         if self.case1 == True:
@@ -235,11 +236,9 @@ class AccountMove(models.Model):
             total = ((self.tax_amount / 100) * self.amount_untaxed)
             self.after_tax_wht = total
         if self.case3 == True:
-
-            total = (self.amount_tax)*(self.total_tax_amount/100)
+            total = (self.amount_tax) * (self.total_tax_amount / 100)
             self.after_tax_wht = total
             # self.ks_global_tax_rate=-1*total
-
 
         if self.case4 == True:
             print("Case 4")
@@ -251,7 +250,7 @@ class AccountMove(models.Model):
             # tax_amount = (self.amount_untaxed * ((self.tax_amount / 100)))
             self.after_tax_wht = self.total_tax_amount
 
-    @api.depends("after_tax_wht",'global_discount_type',
+    @api.depends("after_tax_wht", 'global_discount_type',
                  'global_order_discount')
     def compute_grand_total(self):
         self.grand_total = 0
@@ -264,20 +263,18 @@ class AccountMove(models.Model):
         if self.case3 == True:
             self.grand_total = self.after_tax_wht + self.amount_untaxed
             self.global_order_discount = self.after_wht
-        if self.case4==True:
-            print("--------->",self.after_wht)
+        if self.case4 == True:
+            print("--------->", self.after_wht)
             self.grand_total = self.after_tax_wht + self.amount_untaxed
 
         if self.case5 == True:
             print("--------->", self.after_wht)
             self.grand_total = self.after_tax_wht + self.amount_untaxed
 
-
     def action_post(self):
         rec = super(AccountMove, self).action_post()
         self.action_calculate()
         return rec
-
 
     def get_vehicles(self):
 
@@ -306,9 +303,9 @@ class AccountMove(models.Model):
             total_income_tax = self.after_wht
             print(total_income_tax)
             self.general_entry('Sale Tax Expense', 'Sales Tax Payable', sale_expense, sale_payable, self.after_tax_wht,
-                               ref, journal,sales_partner)
+                               ref, journal, sales_partner)
             self.general_entry('Income Tax Expense', 'Income Tax Payable', income_expense, income_payable,
-                               total_income_tax, ref, journal,income_partner)
+                               total_income_tax, ref, journal, income_partner)
 
         if self.case2 == True:
             journal = self.env['account.journal'].search([('name', 'ilike', 'Miscellaneous Operations')])[0]
@@ -318,7 +315,7 @@ class AccountMove(models.Model):
             sale_payable = self.env['account.account'].search([('name', '=', 'Sales Tax Payable')])[0]
             total_sale_tax = self.after_tax_wht
             self.general_entry('Sale Tax Expense', 'Sales Tax Payable', sale_expense, sale_payable, total_sale_tax, ref,
-                               journal,sales_partner )
+                               journal, sales_partner)
         #
         # if self.case3 == True:
         #     journal = self.env['account.journal'].search([('name', 'ilike', 'Miscellaneous Operations')])[0]
@@ -340,7 +337,7 @@ class AccountMove(models.Model):
             total_sale_tax = self.after_tax_wht
 
             self.general_entry('Sales Tax Current Asset', 'Sales Tax Payable', sale_current_asset, sale_payable,
-                               total_sale_tax, ref, journal,sales_partner )
+                               total_sale_tax, ref, journal, sales_partner)
 
         # if self.case5 == True:
         #     journal = self.env['account.journal'].search([('name', 'ilike', 'Miscellaneous Operations')])[0]
@@ -366,20 +363,18 @@ class AccountMove(models.Model):
         }
         move = self.env['account.move.line'].create(vals)
 
-
-    def general_entry(self, name_first, name_second, account, account_2, amount, ref, journal,partner):
-
+    def general_entry(self, name_first, name_second, account, account_2, amount, ref, journal, partner):
         line_ids = []
         debit_sum = 0.0
         credit_sum = 0.0
-        print("parnter",partner)
+        print("parnter", partner)
         product = self.env['product.product'].search([('name', '=', 'FBR')], limit=1)
         if partner and product:
             debit_line = (0, 0, {
                 'name': name_first,
                 'debit': amount,
                 'credit': 0.0,
-                'partner_id': partner.id,
+                'partner_id': self.partner_id.id,
                 'account_id': account.id,
                 'exclude_from_invoice_tab': True,
             })
@@ -388,7 +383,7 @@ class AccountMove(models.Model):
             credit_line = (0, 0, {
                 'name': name_second,
                 'debit': 0.0,
-                'partner_id': partner.id,
+                'partner_id': self.partner_id.id,
                 'credit': amount,
                 'account_id': account_2.id,
                 'exclude_from_invoice_tab': True,
@@ -400,7 +395,7 @@ class AccountMove(models.Model):
                 'ref': ref,
                 'invoice_origin': ref,
                 'journal_id': journal.id,
-                'partner_id': partner.id,
+                'partner_id': self.partner_id.id,
                 'type': 'entry',
                 'line_ids': line_ids,
                 'auto_post': True,
@@ -442,14 +437,18 @@ class AccountMove(models.Model):
                 quantity = base_line.quantity
                 if base_line.currency_id:
                     if base_line.discount_type and base_line.discount_type == 'fixed':
-                        price_unit_foreign_curr = sign * (base_line.price_unit - (base_line.discount / (base_line.quantity or 1.0)))
+                        price_unit_foreign_curr = sign * (
+                                    base_line.price_unit - (base_line.discount / (base_line.quantity or 1.0)))
                     else:
                         price_unit_foreign_curr = sign * base_line.price_unit * (1 - (base_line.discount / 100.0))
-                    price_unit_comp_curr = base_line.currency_id._convert(price_unit_foreign_curr, move.company_id.currency_id, move.company_id, move.date, round=False)
+                    price_unit_comp_curr = base_line.currency_id._convert(price_unit_foreign_curr,
+                                                                          move.company_id.currency_id, move.company_id,
+                                                                          move.date, round=False)
                 else:
                     price_unit_foreign_curr = 0.0
                     if base_line.discount_type and base_line.discount_type == 'fixed':
-                        price_unit_comp_curr = sign * (base_line.price_unit - (base_line.discount / (base_line.quantity or 1.0)))
+                        price_unit_comp_curr = sign * (
+                                    base_line.price_unit - (base_line.discount / (base_line.quantity or 1.0)))
                     else:
                         price_unit_comp_curr = sign * base_line.price_unit * (1 - (base_line.discount / 100.0))
                 tax_type = 'sale' if move.type.startswith('out_') else 'purchase'
@@ -462,7 +461,8 @@ class AccountMove(models.Model):
                 tax_type = base_line.tax_ids[0].type_tax_use if base_line.tax_ids else None
                 is_refund = (tax_type == 'sale' and base_line.debit) or (tax_type == 'purchase' and base_line.credit)
 
-            balance_taxes_res = base_line.tax_ids._origin.with_context(force_sign=move._get_tax_force_sign()).compute_all(
+            balance_taxes_res = base_line.tax_ids._origin.with_context(
+                force_sign=move._get_tax_force_sign()).compute_all(
                 price_unit_comp_curr,
                 currency=base_line.company_currency_id,
                 quantity=quantity,
@@ -474,16 +474,19 @@ class AccountMove(models.Model):
 
             if move.type == 'entry':
                 repartition_field = is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids'
-                repartition_tags = base_line.tax_ids.mapped(repartition_field).filtered(lambda x: x.repartition_type == 'base').tag_ids
+                repartition_tags = base_line.tax_ids.mapped(repartition_field).filtered(
+                    lambda x: x.repartition_type == 'base').tag_ids
                 tags_need_inversion = (tax_type == 'sale' and not is_refund) or (tax_type == 'purchase' and is_refund)
                 if tags_need_inversion:
                     balance_taxes_res['base_tags'] = base_line._revert_signed_tags(repartition_tags).ids
                     for tax_res in balance_taxes_res['taxes']:
-                        tax_res['tag_ids'] = base_line._revert_signed_tags(self.env['account.account.tag'].browse(tax_res['tag_ids'])).ids
+                        tax_res['tag_ids'] = base_line._revert_signed_tags(
+                            self.env['account.account.tag'].browse(tax_res['tag_ids'])).ids
 
             if base_line.currency_id:
                 # Multi-currencies mode: Taxes are computed both in company's currency / foreign currency.
-                amount_currency_taxes_res = base_line.tax_ids._origin.with_context(force_sign=move._get_tax_force_sign()).compute_all(
+                amount_currency_taxes_res = base_line.tax_ids._origin.with_context(
+                    force_sign=move._get_tax_force_sign()).compute_all(
                     price_unit_foreign_curr,
                     currency=base_line.currency_id,
                     quantity=quantity,
@@ -495,12 +498,15 @@ class AccountMove(models.Model):
 
                 if move.type == 'entry':
                     repartition_field = is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids'
-                    repartition_tags = base_line.tax_ids.mapped(repartition_field).filtered(lambda x: x.repartition_type == 'base').tag_ids
-                    tags_need_inversion = (tax_type == 'sale' and not is_refund) or (tax_type == 'purchase' and is_refund)
+                    repartition_tags = base_line.tax_ids.mapped(repartition_field).filtered(
+                        lambda x: x.repartition_type == 'base').tag_ids
+                    tags_need_inversion = (tax_type == 'sale' and not is_refund) or (
+                                tax_type == 'purchase' and is_refund)
                     if tags_need_inversion:
                         balance_taxes_res['base_tags'] = base_line._revert_signed_tags(repartition_tags).ids
                         for tax_res in balance_taxes_res['taxes']:
-                            tax_res['tag_ids'] = base_line._revert_signed_tags(self.env['account.account.tag'].browse(tax_res['tag_ids'])).ids
+                            tax_res['tag_ids'] = base_line._revert_signed_tags(
+                                self.env['account.account.tag'].browse(tax_res['tag_ids'])).ids
 
                 for b_tax_res, ac_tax_res in zip(balance_taxes_res['taxes'], amount_currency_taxes_res['taxes']):
                     tax = self.env['account.tax'].browse(b_tax_res['id'])
@@ -509,7 +515,9 @@ class AccountMove(models.Model):
                     # A tax having a fixed amount must be converted into the company currency when dealing with a
                     # foreign currency.
                     if tax.amount_type == 'fixed':
-                        b_tax_res['amount'] = base_line.currency_id._convert(b_tax_res['amount'], move.company_id.currency_id, move.company_id, move.date)
+                        b_tax_res['amount'] = base_line.currency_id._convert(b_tax_res['amount'],
+                                                                             move.company_id.currency_id,
+                                                                             move.company_id, move.date)
 
             return balance_taxes_res
 
@@ -551,7 +559,8 @@ class AccountMove(models.Model):
                 grouping_dict = self._get_tax_grouping_key_from_base_line(line, tax_vals)
                 grouping_key = _serialize_tax_grouping_key(grouping_dict)
 
-                tax_repartition_line = self.env['account.tax.repartition.line'].browse(tax_vals['tax_repartition_line_id'])
+                tax_repartition_line = self.env['account.tax.repartition.line'].browse(
+                    tax_vals['tax_repartition_line_id'])
                 tax = tax_repartition_line.invoice_tax_id or tax_repartition_line.refund_tax_id
 
                 if tax.tax_exigibility == 'on_payment':
@@ -566,14 +575,16 @@ class AccountMove(models.Model):
                 })
                 taxes_map_entry['balance'] += tax_vals['amount']
                 taxes_map_entry['amount_currency'] += tax_vals.get('amount_currency', 0.0)
-                taxes_map_entry['tax_base_amount'] += self._get_base_amount_to_display(tax_vals['base'], tax_repartition_line)
+                taxes_map_entry['tax_base_amount'] += self._get_base_amount_to_display(tax_vals['base'],
+                                                                                       tax_repartition_line)
                 taxes_map_entry['grouping_dict'] = grouping_dict
             line.tax_exigible = tax_exigible
 
         # ==== Process taxes_map ====
         for taxes_map_entry in taxes_map.values():
             # Don't create tax lines with zero balance.
-            if self.currency_id.is_zero(taxes_map_entry['balance']) and self.currency_id.is_zero(taxes_map_entry['amount_currency']):
+            if self.currency_id.is_zero(taxes_map_entry['balance']) and self.currency_id.is_zero(
+                    taxes_map_entry['amount_currency']):
                 taxes_map_entry['grouping_dict'] = False
 
             tax_line = taxes_map_entry['tax_line']
@@ -593,7 +604,8 @@ class AccountMove(models.Model):
                     'tax_base_amount': taxes_map_entry['tax_base_amount'],
                 })
             else:
-                create_method = in_draft_mode and self.env['account.move.line'].new or self.env['account.move.line'].create
+                create_method = in_draft_mode and self.env['account.move.line'].new or self.env[
+                    'account.move.line'].create
                 tax_repartition_line_id = taxes_map_entry['grouping_dict']['tax_repartition_line_id']
                 tax_repartition_line = self.env['account.tax.repartition.line'].browse(tax_repartition_line_id)
                 tax = tax_repartition_line.invoice_tax_id or tax_repartition_line.refund_tax_id
@@ -748,12 +760,12 @@ class AccountMove(models.Model):
                 move.invoice_payment_state = 'not_paid'
 
     total_global_discount = fields.Monetary(string='Total Income Tax',
-        store=True, readonly=True, default=0, compute='_compute_amount')
+                                            store=True, readonly=True, default=0, compute='_compute_amount')
     total_discount = fields.Monetary(string='Income Tax Payable', store=True,
-        readonly=True, default=0, compute='_compute_amount', tracking=True)
+                                     readonly=True, default=0, compute='_compute_amount', tracking=True)
     global_discount_type = fields.Selection([('fixed', 'Percent'),
                                              ('percent', 'Fixed')],
-                                            string="Income Tax Type", default='percent',tracking=True)
+                                            string="Income Tax Type", default='percent', tracking=True)
     global_order_discount = fields.Float(string='Income Tax', store=True, tracking=True)
 
     @api.onchange('global_discount_type', 'global_order_discount')
@@ -816,7 +828,8 @@ class AccountMove(models.Model):
                         'credit': balance < 0.0 and -balance or 0.0,
                     })
                 else:
-                    create_method = in_draft_mode and self.env['account.move.line'].new or self.env['account.move.line'].create
+                    create_method = in_draft_mode and self.env['account.move.line'].new or self.env[
+                        'account.move.line'].create
                     candidate = create_method({
                         'name': 'Income Tax Payable',
                         'debit': balance > 0.0 and balance or 0.0,
@@ -914,8 +927,7 @@ class AccountMoveLine(models.Model):
                                       ('percent', 'Percent')],
                                      string="Income Tax Type", default="percent")
     is_global_line = fields.Boolean(string='Income Tax Line',
-        help="This field is used to separate Income Tax line.")
-
+                                    help="This field is used to separate Income Tax line.")
 
     tax_amount = fields.Monetary(string='Tax amount', store=True, readonly=True,
                                  currency_field='always_set_currency_id', compute="get_line_tax_amount")
@@ -923,7 +935,7 @@ class AccountMoveLine(models.Model):
     case_state = fields.Selection([('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], string="Case State",
                                   readonly=True)
 
-    @api.depends('product_id','quantity', 'tax_ids', 'price_unit','move_id.case_state')
+    @api.depends('product_id', 'quantity', 'tax_ids', 'price_unit', 'move_id.case_state')
     def get_line_tax_amount(self):
         for line in self:
             line.tax_amount = 0.0
@@ -940,7 +952,8 @@ class AccountMoveLine(models.Model):
                 line.case_state = line.move_id.case_state
 
     @api.model
-    def _get_price_total_and_subtotal_model(self, price_unit, quantity, discount, currency, product, partner, taxes, move_type):
+    def _get_price_total_and_subtotal_model(self, price_unit, quantity, discount, currency, product, partner, taxes,
+                                            move_type):
         ''' This method is used to compute 'price_total' & 'price_subtotal'.
 
         :param price_unit:  The current price unit.
@@ -959,7 +972,10 @@ class AccountMoveLine(models.Model):
         discount_type = ''
         if self._context and self._context.get('wk_vals_list', []):
             for vals in self._context.get('wk_vals_list', []):
-                if price_unit == vals.get('price_unit', 0.0) and quantity == vals.get('quantity', 0.0) and discount == vals.get('discount', 0.0) and product.id == vals.get('product_id', False) and partner.id == vals.get('partner_id', False):
+                if price_unit == vals.get('price_unit', 0.0) and quantity == vals.get('quantity',
+                                                                                      0.0) and discount == vals.get(
+                        'discount', 0.0) and product.id == vals.get('product_id', False) and partner.id == vals.get(
+                        'partner_id', False):
                     discount_type = vals.get('discount_type', '')
         discount_type = self.discount_type or discount_type or ''
         if discount_type == 'fixed':
@@ -973,18 +989,23 @@ class AccountMoveLine(models.Model):
         if taxes:
             force_sign = -1 if move_type in ('out_invoice', 'in_refund', 'out_receipt') else 1
             taxes_res = taxes._origin.with_context(force_sign=force_sign).compute_all(price_unit_wo_discount,
-                quantity=quantity, currency=currency, product=product, partner=partner, is_refund=move_type in ('out_refund', 'in_refund'))
+                                                                                      quantity=quantity,
+                                                                                      currency=currency,
+                                                                                      product=product, partner=partner,
+                                                                                      is_refund=move_type in (
+                                                                                      'out_refund', 'in_refund'))
             res['price_subtotal'] = taxes_res['total_excluded']
             res['price_total'] = taxes_res['total_included']
         else:
             res['price_total'] = res['price_subtotal'] = subtotal
-        #In case of multi currency, round before it's use for computing debit credit
+        # In case of multi currency, round before it's use for computing debit credit
         if currency:
             res = {k: currency.round(v) for k, v in res.items()}
         return res
 
     @api.model
-    def _get_fields_onchange_balance_model(self, quantity, discount, balance, move_type, currency, taxes, price_subtotal, force_computation=False):
+    def _get_fields_onchange_balance_model(self, quantity, discount, balance, move_type, currency, taxes,
+                                           price_subtotal, force_computation=False):
         ''' This method is used to recompute the values of 'quantity', 'discount', 'price_unit' due to a change made
         in some accounting fields such as 'balance'.
 
@@ -1043,7 +1064,9 @@ class AccountMoveLine(models.Model):
         discount_type = ''
         if self._context and self._context.get('wk_vals_list', []):
             for vals in self._context.get('wk_vals_list', []):
-                if quantity == vals.get('quantity', 0.0) and discount == vals.get('discount', 0.0) and balance == vals.get(balance_form, 0.0):
+                if quantity == vals.get('quantity', 0.0) and discount == vals.get('discount',
+                                                                                  0.0) and balance == vals.get(
+                        balance_form, 0.0):
                     discount_type = vals.get('discount_type', '')
         discount_type = self.discount_type or discount_type or ''
         if discount_type == 'fixed':
