@@ -180,11 +180,15 @@ class AccountMove(models.Model):
 
     @api.depends("wth_amount", "tax_amount", 'global_discount_type', 'global_order_discount', 'amount_tax', 'sale_tax_type')
     def compute_after_WHT(self):
+        if self.sale_tax_type == 'percent':
+            af_total = ((self.tax_amount / 100) * self.amount_untaxed)
+        else:
+            af_total = self.tax_amount
         self.after_wht = 0
         if self.case1 == True:
             print("CASE WHT 1")
             if self.global_discount_type == 'fixed':
-                income_tax = (self.amount_untaxed * ((self.wth_amount / 100)))
+                income_tax = ((self.amount_untaxed + self.total_tax_amount + af_total) * ((self.wth_amount / 100)))
             else:
                 income_tax = self.wth_amount
             if self.sale_tax_type == 'percent':
@@ -197,7 +201,7 @@ class AccountMove(models.Model):
         if self.case2 == True:
             print("CASE WHT calculation 2", self.tax_amount)
             if self.global_discount_type == 'fixed':
-                income_tax = (self.amount_untaxed * ((self.wth_amount / 100)))
+                income_tax = ((self.amount_untaxed + self.total_tax_amount + self.after_tax_wht) * ((self.wth_amount / 100)))
             else:
                 income_tax = self.wth_amount
             self.after_wht = income_tax
@@ -205,7 +209,7 @@ class AccountMove(models.Model):
 
         if self.case3 == True:
             if self.global_discount_type == 'fixed':
-                total = (self.total_tax_amount + self.amount_untaxed) * (self.wth_amount / 100)
+                total = (self.total_tax_amount + self.amount_untaxed + self.after_tax_wht) * (self.wth_amount / 100)
             else:
                 total = self.wth_amount
             self.after_wht = total

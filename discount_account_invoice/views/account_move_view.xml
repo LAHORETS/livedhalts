@@ -34,21 +34,20 @@
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
 
-
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" type="object" name="get_vehicles"
                             icon="fa-list">
                         <field string="FBR Taxes" name="fbr_taxes" widget="statinfo"/>
                     </button>
                 </div>
+
                 <xpath expr="//field[@name='ref']" position="after">
                     <field name="exempt"/>
                     <field name="income_tax"/>
                     <field name="prodtotal"/>
                     <field name="service_tax"/>
                     <field name="servicetotal"/>
-
-                      <field name="case_state"  invisible="0"/>
+                    <field name="case_state"  invisible="0"/>
                     <field name="case1"  invisible="1"/>
                     <field name="case2" invisible="1"/>
                     <field name="case3"  invisible="1"/>
@@ -86,18 +85,21 @@
                 <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="before">
                     <field name="discount_type" invisible="1" groups="product.group_discount_per_so_line" optional="show"/>
                 </xpath>
+
                 <xpath expr="//field[@name='line_ids']/tree/field[@name='discount']" position="before">
                     <field name="is_global_line" invisible="1"/>
                     <field name="discount_type" invisible="1"/>
                 </xpath>
+
                 <xpath expr="//field[@name='tax_ids']" position="after">
                     <field name="tax_amount" invisible="0"/>
                     <field name="case_state" invisible="0"/>
                 </xpath>
 
-                   <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='tax_ids']" position="attributes">
-                  <attribute name="attrs">{'required': [('case_state','in',['3'])]}</attribute>
-              </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='tax_ids']" position="attributes">
+                    <attribute name="attrs">{'required': [('case_state','in',['3'])]}</attribute>
+                </xpath>
+
             </field>
         </record>
     </data>
