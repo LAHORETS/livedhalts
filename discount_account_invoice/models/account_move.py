@@ -38,10 +38,10 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     exempt = fields.Boolean("Exemption Certificate", related='partner_id.exempt')
-    wth_amount = fields.Float("WHT")
-    after_wht = fields.Float("WHT Amt", compute="compute_after_WHT")
-    tax_amount = fields.Float("Sales Tax %")
-    after_tax_wht = fields.Float("Tax Amt", compute="compute_after_tax_wht")
+    wth_amount = fields.Float("Income WHT")
+    after_wht = fields.Float("Income WHT Amt", compute="compute_after_WHT")
+    tax_amount = fields.Float("Sales Tax")
+    after_tax_wht = fields.Float("Sale Tax Amt", compute="compute_after_tax_wht")
     grand_total = fields.Float("Grand Total", compute="compute_grand_total")
     case1 = fields.Boolean("Case 1", compute="compute_case_partner")
     case2 = fields.Boolean("Case 2", compute="compute_case_partner")
@@ -178,7 +178,7 @@ class AccountMove(models.Model):
                     self.case = True
                     self.case_3_5 = True
 
-    @api.depends("wth_amount", "tax_amount", 'global_discount_type', 'global_order_discount', 'amount_tax')
+    @api.depends("wth_amount", "tax_amount", 'global_discount_type', 'global_order_discount', 'amount_tax', 'sale_tax_type')
     def compute_after_WHT(self):
         self.after_wht = 0
         if self.case1 == True:
@@ -187,7 +187,10 @@ class AccountMove(models.Model):
                 income_tax = (self.amount_untaxed * ((self.wth_amount / 100)))
             else:
                 income_tax = self.wth_amount
-            tax_amount = (self.amount_untaxed * ((self.tax_amount / 100)))
+            if self.sale_tax_type == 'percent':
+                tax_amount = (self.amount_untaxed * ((self.tax_amount / 100)))
+            else:
+                tax_amount = self.tax_amount
             self.after_wht = income_tax
             self.after_tax_wht = tax_amount
 
@@ -224,7 +227,7 @@ class AccountMove(models.Model):
             self.global_order_discount = self.after_wht
 
     @api.depends("wth_amount", "tax_amount", 'global_discount_type',
-                 'global_order_discount', 'amount_tax')
+                 'global_order_discount', 'amount_tax', 'sale_tax_type')
     def compute_after_tax_wht(self):
         self.after_tax_wht = 0
         if self.case1 == True:
@@ -233,7 +236,10 @@ class AccountMove(models.Model):
 
         if self.case2 == True:
             print("Case 2")
-            total = ((self.tax_amount / 100) * self.amount_untaxed)
+            if self.sale_tax_type == 'percent':
+                total = ((self.tax_amount / 100) * self.amount_untaxed)
+            else:
+                total = self.tax_amount
             self.after_tax_wht = total
         if self.case3 == True:
             total = (self.amount_tax) * (self.total_tax_amount / 100)
@@ -242,7 +248,10 @@ class AccountMove(models.Model):
 
         if self.case4 == True:
             print("Case 4")
-            tax_amount = (self.grand_total * ((self.tax_amount / 100)))
+            if self.sale_tax_type == 'percent':
+                tax_amount = (self.grand_total * ((self.tax_amount / 100)))
+            else:
+                tax_amount = self.tax_amount
             self.after_tax_wht = tax_amount
 
         if self.case5 == True:
@@ -766,6 +775,9 @@ class AccountMove(models.Model):
     global_discount_type = fields.Selection([('fixed', 'Percent'),
                                              ('percent', 'Fixed')],
                                             string="Income Tax Type", default='percent', tracking=True)
+    sale_tax_type = fields.Selection([('fixed', 'Fixed'),
+                                             ('percent', 'Percent')],
+                                            string="Sale Tax Type", default='percent', tracking=True)
     global_order_discount = fields.Float(string='Income Tax', store=True, tracking=True)
 
     @api.onchange('global_discount_type', 'global_order_discount')
