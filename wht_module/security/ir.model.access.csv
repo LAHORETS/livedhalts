@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_wth_tax,access.wth.tax,model_wth_tax,base.group_user,1,1,1,1
+access_wth_lines,access.wth.lines,model_wth_lines,base.group_user,1,1,1,1

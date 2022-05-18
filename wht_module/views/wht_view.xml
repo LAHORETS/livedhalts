@@ -1,0 +1,87 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="wht_tree">
+            <field name="name">Withholding Tax</field>
+            <field name="model">wth.tax</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="wh_tax"/>
+                    <field name="amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="wht_form">
+            <field name="name">Withholding Tax</field>
+            <field name="model">wth.tax</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="wh_tax"/>
+                            </group>
+                            <group>
+                                <field name="text_scope"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Definition">
+                                <group>
+                                    <group>
+                                        <field name="tax_computation"/>
+                                        <field name="amount" string="Amount(%)" attrs="{'readonly': [('tax_computation', '=', 'fixed')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="account_id"/>
+                                        <field name="payment_excess"/>
+
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Advance Options">
+                                <group>
+                                    <group>
+                                        <field name="label_on_invoice"/>
+                                        <field name="tax_group_id"/>
+                                        <field name="tags"/>
+                                        <field name="inc_analytic_cost"/>
+                                    </group>
+                                    <group>
+                                        <h2>Base Amount Calculation</h2>
+                                        <field name="base_amount_calc" widget="radio"/>
+                                        <h2>Control</h2>
+                                        <field name="control_amount_calc" widget="radio"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="wht_action">
+            <field name="name">Withholding Tax</field>
+            <field name="res_model">wth.tax</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="wht_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    create your first WHT!
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem name="With Holding Tax" id="wht_menu_root" parent="account.menu_account_config"
+                  action="wht_module.wht_action" sequence="100"/>
+
+
+    </data>
+</odoo>
