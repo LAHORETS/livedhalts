@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_move_form" model="ir.ui.view">
+        <field name="name">account.move</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='other_info']" position="after">
+                <page string="Withholding Tax">
+                    <field name="wth_lines_id">
+                        <tree editable="bottom">
+                            <field name="untaxed_amount" optional="show"/>
+                            <field name="sales_tax" optional="show"/>
+                            <field name="total_amount" optional="show"/>
+                            <field name="wht_id" optional="show"/>
+                            <field name="base_amount" optional="show"/>
+                            <field name="tax_amount" optional="show"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_form" model="ir.ui.view">
+        <field name="name">account.payment</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_method_id']" position="after">
+                <field name="is_withholding"/>
+            </xpath>
+            <xpath expr="//form/sheet" position="inside">
+                <notebook>
+                    <page string="Withholding Tax">
+                        <field name="wth_lines_id">
+                            <tree editable="bottom">
+                                <field name="wht_id" optional="show"/>
+                                <field name="percentage" optional="show" string="Percentage(%)"/>
+                                <field name="base_amount" optional="show"/>
+                                <field name="tax_amount" optional="show"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>
