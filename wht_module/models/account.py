@@ -139,6 +139,7 @@ class AccountPayment(models.Model):
                     ],
                 }
             else:
+                total_tax = sum(payment.wth_lines_id.mapped('tax_amount'))
                 move_vals = {
                     'date': payment.payment_date,
                     'ref': payment.communication,
@@ -161,30 +162,45 @@ class AccountPayment(models.Model):
                         # Liquidity line.
                         (0, 0, {
                             'name': liquidity_line_name,
-                            'amount_currency': -liquidity_amount if liquidity_line_currency_id else 0.0,
+                            'amount_currency': -(payment.amount - total_tax) or 0.0,
                             'currency_id': liquidity_line_currency_id,
                             'debit': balance < 0.0 and -balance or 0.0,
                             # 'credit': balance > 0.0 and balance or 0.0,
-                            'credit': payment.wth_lines_id[0].base_amount - payment.wth_lines_id[0].tax_amount or 0.0,
+                            'credit': payment.amount - total_tax or 0.0,
                             'date_maturity': payment.payment_date,
                             'partner_id': payment.partner_id.commercial_partner_id.id,
                             'account_id': liquidity_line_account.id,
                             'payment_id': payment.id,
                         }),
-                        (0, 0, {
-                            'name': 'Withholding Tax',
-                            'amount_currency': -payment.wth_lines_id[0].tax_amount or 0.0,
+                        # (0, 0, {
+                        #     'name': 'Withholding Tax',
+                        #     'amount_currency': -total_tax or 0.0,
+                        #     'currency_id': liquidity_line_currency_id,
+                        #     'debit': balance < 0.0 and -balance or 0.0,
+                        #     # 'credit': balance > 0.0 and balance or 0.0,
+                        #     'credit': total_tax or 0.0,
+                        #     'date_maturity': payment.payment_date,
+                        #     'partner_id': payment.partner_id.commercial_partner_id.id,
+                        #     'account_id': payment.wth_lines_id[0].wht_id.account_id.id,
+                        #     'payment_id': payment.id,
+                        # }),
+                    ],
+                }
+
+                for res in payment.wth_lines_id:
+                    move_vals['line_ids'].append((0, 0, {
+                        'name': 'Withholding Tax ' + res.wht_id.wh_tax,
+                            'amount_currency': -res.tax_amount or 0.0,
                             'currency_id': liquidity_line_currency_id,
                             'debit': balance < 0.0 and -balance or 0.0,
                             # 'credit': balance > 0.0 and balance or 0.0,
-                            'credit': payment.wth_lines_id[0].tax_amount or 0.0,
+                            'credit': res.tax_amount or 0.0,
                             'date_maturity': payment.payment_date,
                             'partner_id': payment.partner_id.commercial_partner_id.id,
-                            'account_id': payment.wth_lines_id[0].wht_id.account_id.id,
+                            'account_id': res.wht_id.account_id.id,
                             'payment_id': payment.id,
-                        }),
-                    ],
-                }
+                    }))
+
             if write_off_balance:
                 # Write-off line.
                 move_vals['line_ids'].append((0, 0, {

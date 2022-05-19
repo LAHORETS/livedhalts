@@ -10,7 +10,7 @@
                     <group>
                         <group>
                             <field name="tax_liable"/>
-                            <field name="wht_id"/>
+                            <field name="wht_ids" widget="many2many_tags"/>
                         </group>
                         <group>
                             <field name="tax_exempt"/>

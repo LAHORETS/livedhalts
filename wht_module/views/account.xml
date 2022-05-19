@@ -31,7 +31,7 @@
                 <field name="is_withholding"/>
             </xpath>
             <xpath expr="//form/sheet" position="inside">
-                <notebook>
+                <notebook attrs="{'invisible': [('is_withholding', '=', False)]}">
                     <page string="Withholding Tax">
                         <field name="wth_lines_id">
                             <tree editable="bottom">
