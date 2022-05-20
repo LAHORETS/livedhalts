@@ -76,6 +76,7 @@ class AddAllowancesDeduction(models.Model):
     conveyance = fields.Float("Conveyance")
     mobile_allowance = fields.Float("Mobile Allowance")
     meal_allowance = fields.Float("Meal Allowance")
+    fuel_allowance = fields.Float("Fuel Allowance")
     other = fields.Float("Other")
     income_tax = fields.Float("Income Tax")
     advances = fields.Float("Advances")
