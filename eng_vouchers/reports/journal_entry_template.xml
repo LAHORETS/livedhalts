@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+	<data>
+
+        <template id="view_journal_entry_template">
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+                <div class="page">
+                    <br/>
+                    <br/>
+                    <div class="oe_structure"/>
+                    <div>
+                        <h3 class="text-center mb32">
+                            <strong>Journal Voucher</strong>
+                        </h3>
+                    </div>
+                    <br/>
+
+                    <div class="row" id="journal_information">
+                        <div class="col-8">
+                            <div>
+                                <strong>Journal Entry :</strong>
+                                <span t-field="o.name"/>
+                            </div>
+
+                            <div class="text-left">
+                                <strong>Print Date :</strong>
+                                <span t-esc="datetime.date.today()"/>
+                            </div>
+                            <div class="text-left">
+                                <strong>Print User :</strong>
+                                <span t-esc="user.name"/>
+                            </div>
+                        </div>
+
+                        <div class="col-8">
+                            <div>
+                                <strong>Journal :</strong>
+                                <span t-field="o.journal_id"/>
+                            </div>
+                            <div class="text-left">
+                                <strong>Reference :</strong>
+                                <span t-field="o.ref"/>
+                            </div>
+                            <div class="text-left">
+                                <strong>Posting Date :</strong>
+                                <span t-field="o.date"/>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <br/>
+                    <br/>
+                    <table style="border-collapse: collapse;width: 100%;" class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Partner</th>
+                                <th>Account</th>
+                                <th>Description</th>
+                                <th>Due Date</th>
+                                <th>Analytic Account</th>
+                                <th>Taxes(%)</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
+                            </tr>
+                        </thead>
+                        <tbody class="consumed_tbody">
+                            <t t-set="total" t-value="0.0"/>
+                            <t t-set="total1" t-value="0.0"/>
+                            <t t-foreach="o.line_ids" t-as="line">
+                                <tr>
+                                    <td>
+                                        <span t-field="line.partner_id"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.account_id"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.date_maturity"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.analytic_account_id"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.tax_ids"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.debit"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.credit"/>
+                                    </td>
+                                </tr>
+                                <t t-set="total" t-value="total + line.debit"/>
+                                <t t-set="total1" t-value="total1 + line.credit"/>
+                            </t>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <strong>Total:</strong>
+                                </td>
+                                <td width="10%">
+                                    <strong>
+                                        <span>
+                                            <t t-esc="total"/>
+                                        </span>
+                                    </strong>
+                                </td>
+                                <td width="10%">
+                                    <strong>
+                                        <span>
+                                            <t t-esc="total1"/>
+                                        </span>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                    <tr>
+                        <strong >Amount In Words: </strong>
+                        <span t-esc="o.amnt_to_text(total)"/>
+                    </tr>
+
+                    <div class="row" style="margin-top:150px;">
+                        <div class="col-xs-4">
+                            <strong>Prepared By:</strong>
+                            <span style="margin-left:7px;" t-field="o.user_id.name"/>
+                        </div>
+
+                        <div class="col-xs-4" style="margin-left:40px;">
+                            <strong>Checked By:</strong>
+                        </div>
+
+                        <div class="col-xs-4" style="margin-left:250px;">
+                            <strong>Verified By:</strong>
+                        </div>
+
+                        <div class="col-xs-4" style="margin-left:250px;">
+                            <strong>Approved By:</strong>
+                        </div>
+                    </div>
+
+                </div>
+            </t>
+        </template>
+
+		<template id="journal_entry_template">
+			<t t-call="web.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="eng_vouchers.view_journal_entry_template"  t-lang="o.partner_id.lang"/>
+				</t>
+			</t>
+		</template>
+
+	</data>
+</odoo>

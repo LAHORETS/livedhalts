@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<report id="journal_entry_report"
+			string="Journal Voucher"
+			model="account.move"
+			report_type="qweb-pdf"
+			file="eng_vouchers.journal_entry_template"
+			name="eng_vouchers.journal_entry_template"
+	/>
+
+</odoo>

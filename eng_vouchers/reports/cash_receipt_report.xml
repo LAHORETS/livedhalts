@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+	<report id="cash_receipt_report"
+			string="Print Voucher"
+			model="account.payment"
+			report_type="qweb-pdf"
+			file="eng_vouchers.cash_receipt_template"
+			name="eng_vouchers.cash_receipt_template"
+	/>
+							
+</odoo>
