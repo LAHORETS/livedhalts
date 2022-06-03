@@ -21,6 +21,7 @@
                     <group name="deductions" string="Deductions">
                         <field name="income_tax"/>
                         <field name="advances"/>
+                        <field name="loan_against_pf"/>
                         <field name="eobi"/>
                         <field name="provident_fund"/>
                         <field name="pessi"/>

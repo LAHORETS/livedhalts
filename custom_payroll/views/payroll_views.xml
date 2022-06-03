@@ -19,22 +19,25 @@
             <xpath expr="//group[@name='main_info']" position="after">
                 <group>
                     <group name="allowances" string="Allowances">
-<!--                        <field name="fuel_allowance"/>-->
-<!--                        <field name="mobile_allowance"/>-->
-<!--                        <field name="meal_allowance"/>-->
+                        <!--                        <field name="fuel_allowance"/>-->
+                        <!--                        <field name="mobile_allowance"/>-->
+                        <!--                        <field name="meal_allowance"/>-->
                         <field name="arears"/>
                         <field name="car_allowance"/>
                         <field name="driver_allowance"/>
                         <field name="over_time"/>
-<!--                        <field name="other_allowance"/>-->
+                        <h2>Reimbursement</h2>
+                        <field name="fuel_reimbursement"/>
+                        <field name="medical_reimbursement"/>
+                        <!--                        <field name="other_allowance"/>-->
                     </group>
 
                     <group name="deductions" string="Deductions">
-<!--                        <field name="income_tax"/>-->
-<!--                        <field name="advances"/>-->
-<!--                        <field name="provident_fund"/>-->
+                        <!--                        <field name="income_tax"/>-->
+                        <!--                        <field name="advances"/>-->
+                        <!--                        <field name="provident_fund"/>-->
                         <field name="unpaid_leaves"/>
-<!--                        <field name="other_deductions"/>-->
+                        <!--                        <field name="other_deductions"/>-->
                     </group>
                 </group>
             </xpath>

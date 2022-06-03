@@ -80,6 +80,7 @@ class AddAllowancesDeduction(models.Model):
     other = fields.Float("Other")
     income_tax = fields.Float("Income Tax")
     advances = fields.Float("Advances")
+    loan_against_pf = fields.Float('Loan Against PF')
     eobi = fields.Float("EOBI")
     provident_fund = fields.Float("Provident Fund")
     pessi = fields.Float("PESSI")

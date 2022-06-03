@@ -9,7 +9,9 @@ class HrContractInherit(models.Model):
     # fuel_allowance = fields.Float(string="Fuel Allowance")
     # mobile_allowance = fields.Float(string="Mobile Allowance")
     # meal_allowance = fields.Float(string="Meal Allowance")
-    arears = fields.Float(string="Arears / Reimbursement")
+    arears = fields.Float(string="Arears")
+    fuel_reimbursement = fields.Float('Fuel Reimbursement')
+    medical_reimbursement = fields.Float('Medical Reimbursement')
     car_allowance = fields.Float(string="Car Monetization  Allowance")
     driver_allowance = fields.Float(string="Driver Allowance")
     over_time = fields.Float(string="Over Time")
@@ -35,6 +37,7 @@ class HrContractInherit(models.Model):
             self.utility = 0
             self.house_rent = 0
             self.basic = 0
+
 
 class HrPayslipInherit(models.Model):
     _inherit = 'hr.payslip'
