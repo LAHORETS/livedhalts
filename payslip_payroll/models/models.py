@@ -78,11 +78,6 @@ class AddAllowancesDeduction(models.Model):
     meal_allowance = fields.Float("Meal Allowance")
     fuel_allowance = fields.Float("Fuel Allowance")
     other = fields.Float("Other")
-
-    bonus = fields.Float(string="Bonus")
-    travelling_allowance = fields.Float(string="Travelling / Daily Allowances")
-    earned_leaves = fields.Float(string="Earned Leaves")
-
     income_tax = fields.Float("Income Tax")
     advances = fields.Float("Advances")
     eobi = fields.Float("EOBI")
