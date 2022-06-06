@@ -6,6 +6,18 @@ from odoo.exceptions import UserError, ValidationError
 from datetime import datetime
 
 
+# class PurchaseOrderInherit(models.Model):
+#     _inherit = 'purchase.order'
+#
+#     def button_confirm(self):
+#         record = super(PurchaseOrderInherit, self).button_confirm()
+#         for rec in self.picking_ids:
+#             print(rec.scheduled_date)
+#             rec.scheduled_date = ''
+#             for line in rec.move_ids_without_package:
+#                 line.date_expected = ''
+
+
 class AccountMoveInh(models.Model):
     _inherit = 'account.move'
 
@@ -18,6 +30,82 @@ class AccountMoveInh(models.Model):
                 slip.loan_line.paid_on = datetime.today()
                 slip.loan_line.paid_amount = slip.loan_line.amount
         return super(AccountMoveInh, self).action_post()
+
+
+class HrAdvanceInh(models.Model):
+    _inherit = 'hr.advance'
+
+    journal_id = fields.Many2one('account.journal')
+    is_payment_created = fields.Boolean('Is Created', default=False)
+    move_id = fields.Many2one('account.move')
+
+    def action_view_entry(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'binding_type': 'object',
+            'domain': [('ref', '=', self.name)],
+            'target': 'current',
+            'name': 'Journal Item',
+            'res_model': 'account.move',
+            'view_mode': 'tree,form',
+        }
+
+    def action_create_payment(self):
+        self._action_general_entry()
+
+    def _action_general_entry(self):
+        line_ids = []
+        debit_sum = 0.0
+        credit_sum = 0.0
+        for rec in self:
+            if not rec.journal_id:
+                raise UserError('Please Select Journal.')
+            debit_account = self.env['account.account'].search([('name', '=', 'Advances to Employees against Salary')])
+            if not debit_account:
+                raise UserError('Debit Account not Found.')
+            move_dict = {
+                'ref': rec.name,
+                'journal_id': rec.journal_id.id,
+                'partner_id': rec.employee_id.address_home_id.id,
+                'date': datetime.today(),
+                'state': 'draft',
+            }
+            debit_line = (0, 0, {
+                'name': 'Advances to Employees against Salary',
+                'debit': abs(rec.loan_amount),
+                'credit': 0.0,
+                'partner_id': rec.employee_id.address_home_id.id,
+                'account_id': debit_account.id,
+            })
+            line_ids.append(debit_line)
+            debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
+            credit_line = (0, 0, {
+                'name': 'Advances to Employees against Salary',
+                'debit': 0.0,
+                'partner_id': rec.employee_id.address_home_id.id,
+                'credit': abs(rec.loan_amount),
+                'account_id': rec.journal_id.default_credit_account_id.id,
+            })
+            line_ids.append(credit_line)
+            credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
+
+            move_dict['line_ids'] = line_ids
+            move = self.env['account.move'].create(move_dict)
+            line_ids = []
+            rec.is_payment_created = True
+            rec.move_id = move.id
+            print("General entry created")
+
+
+class HrAdvanceLineInh(models.Model):
+    _inherit = 'hr.advance.line'
+
+    paid_on = fields.Date()
+    paid_amount = fields.Float()
+    status = fields.Selection([
+        ('unpaid', 'Unpaid'),
+        ('paid', 'Paid'),
+    ], string="Status", default='unpaid', copy=False )
 
 
 class HrLoanInh(models.Model):
@@ -114,10 +202,13 @@ class HrPayslipInh(models.Model):
     _inherit = 'hr.payslip'
 
     loan_amount = fields.Float()
+    advance_amount = fields.Float()
     loan_line = fields.Many2one('hr.loan.line')
+    advance_line = fields.Many2one('hr.advance.line')
 
     def compute_sheet(self):
         for rec in self:
+            # Loans
             loan = self.env['hr.loan'].search([('employee_id', '=', rec.employee_id.id), ('state', '=', 'approve'), ('is_payment_created', '=', True)])
             amount = 0
             if loan and loan.move_id.state == 'posted':
@@ -126,6 +217,18 @@ class HrPayslipInh(models.Model):
                         amount = amount + line.amount
                         rec.loan_line = line.id
             rec.loan_amount = amount
+
+            # Advances
+            loan = self.env['hr.advance'].search([('employee_id', '=', rec.employee_id.id), ('state', '=', 'approve'),
+                                               ('is_payment_created', '=', True)])
+            ad_amount = 0
+            if loan and loan.move_id.state == 'posted':
+                for line in loan.advance_lines:
+                    if rec.date_from.month == line.date.month and line.status != 'paid':
+                        ad_amount = ad_amount + line.amount
+                        rec.advance_line = line.id
+            rec.advance_amount = ad_amount
+
             return super(HrPayslipInh, self).compute_sheet()
 
     def action_payslip_done(self):

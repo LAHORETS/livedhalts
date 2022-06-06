@@ -19,7 +19,7 @@
     'version': '0.13',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'hr_payroll', 'hr_payroll_account', 'ohrms_loan'],
+    'depends': ['base', 'hr_payroll', 'hr_payroll_account', 'ohrms_loan', 'lts_advances'],
 
     # always loaded
     'data': [
