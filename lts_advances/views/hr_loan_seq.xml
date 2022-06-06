@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<odoo>
+
+	<record id="ir_seq_hr_advance" model="ir.sequence">
+		<field name="name">Advance Request</field>
+		<field name="code">hr.advance.seq</field>
+		<field name="prefix">AS/</field>
+		<field name="padding">4</field>
+		<field name="number_increment">1</field>
+		<field name="number_next_actual">1</field>
+		<field name="implementation">standard</field>
+	</record>
+
+</odoo>
