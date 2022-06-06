@@ -16,6 +16,9 @@
                         <field name="meal_allowance"/>
                         <field name="fuel_allowance"/>
                         <field name="other"/>
+                        <field name="bonus"/>
+                        <field name="travelling_allowance"/>
+                        <field name="earned_leaves"/>
                     </group>
 
                     <group name="deductions" string="Deductions">
