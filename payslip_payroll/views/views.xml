@@ -16,12 +16,14 @@
                         <field name="meal_allowance"/>
                         <field name="fuel_allowance"/>
                         <field name="other"/>
+                        <field name="bonus"/>
+                        <field name="travelling_allowance"/>
+                        <field name="earned_leaves"/>
                     </group>
 
                     <group name="deductions" string="Deductions">
                         <field name="income_tax"/>
                         <field name="advances"/>
-                        <field name="loan_against_pf"/>
                         <field name="eobi"/>
                         <field name="provident_fund"/>
                         <field name="pessi"/>
