@@ -6,16 +6,13 @@ from odoo.exceptions import UserError, ValidationError
 from datetime import datetime
 
 
-# class PurchaseOrderInherit(models.Model):
-#     _inherit = 'purchase.order'
-#
-#     def button_confirm(self):
-#         record = super(PurchaseOrderInherit, self).button_confirm()
-#         for rec in self.picking_ids:
-#             print(rec.scheduled_date)
-#             rec.scheduled_date = ''
-#             for line in rec.move_ids_without_package:
-#                 line.date_expected = ''
+class PurchaseOrderInherit(models.Model):
+    _inherit = 'purchase.order'
+
+    def button_confirm(self):
+        record = super(PurchaseOrderInherit, self).button_confirm()
+        for rec in self.picking_ids:
+            rec.scheduled_date = self.date_order
 
 
 class AccountMoveInh(models.Model):
