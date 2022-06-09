@@ -1,6 +1,18 @@
 <odoo>
     <data>
 
+         <record id="view_stock_picking_inh" model="ir.ui.view">
+            <field name="name">stock.picking.form.inh</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+
+                 <xpath expr="//field[@name='scheduled_date']" position="before">
+                     <field name="new_date" required="1" string="Receipt Date"/>
+                </xpath>
+            </field>
+         </record>
+
         <record id="view_hr_employee_inh" model="ir.ui.view">
             <field name="name">hr.employee.form.inh</field>
             <field name="model">hr.employee</field>
