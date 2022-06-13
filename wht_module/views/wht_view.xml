@@ -79,8 +79,8 @@
         </record>
 
 
-        <menuitem name="With Holding Tax" id="wht_menu_root" parent="account.menu_account_config"
-                  action="wht_module.wht_action" sequence="100"/>
+        <menuitem name="With Holding Tax" id="wht_menu_root" parent="account.menu_finance_configuration"
+                  action="wht_module.wht_action" sequence="1"/>
 
 
     </data>
