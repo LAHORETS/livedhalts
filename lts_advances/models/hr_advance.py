@@ -188,12 +188,11 @@ class InstallmentLine(models.Model):
     payslip_id = fields.Many2one('hr.payslip', string="Payslip Ref.", help="Payslip")
 
 
-class HrEmployee(models.Model):
+class HrEmployeeInh(models.Model):
     _inherit = "hr.employee"
 
-    def _compute_employee_loans(self):
-        """This compute the loan amount and total loans count of an employee.
-            """
-        self.loan_count = self.env['hr.advance'].search_count([('employee_id', '=', self.id)])
+    advance_count = fields.Integer(string="Advance Count", compute='compute_employee_loans')
 
-    advance_count = fields.Integer(string="Advance Count", compute='_compute_employee_loans')
+    def compute_employee_loans(self):
+        for rec in self:
+            rec.advance_count = 0

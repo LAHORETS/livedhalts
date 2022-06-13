@@ -13,7 +13,7 @@
     'maintainer': 'Viltco',
     'website': "https://www.viltco.com",
     'depends': [
-        'base', 'hr', 'account',
+        'base', 'hr', 'account', 'payslip_payroll'
     ],
     'data': [
         'security/ir.model.access.csv',

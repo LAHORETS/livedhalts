@@ -10,4 +10,16 @@
             </xpath>
         </field>
     </record>
+
+     <record id="hr_contract_form_inh" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="payslip_payroll.add_allowances_and_deductions"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='provident_fund']" position="after">
+                <field name="loan_against_pf"/>
+            </xpath>
+        </field>
+     </record>
+
 </odoo>

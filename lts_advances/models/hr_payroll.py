@@ -4,6 +4,11 @@ import babel
 from odoo import models, fields, api, tools, _
 from datetime import datetime
 
+class HrContractInh(models.Model):
+    _inherit = 'hr.contract'
+
+    loan_against_pf = fields.Float()
+
 
 class HrPayslipInput(models.Model):
     _inherit = 'hr.payslip.input'
