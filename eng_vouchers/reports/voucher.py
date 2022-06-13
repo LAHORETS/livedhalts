@@ -7,6 +7,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
 from num2words import num2words
+from pytz import timezone
 
 
 class AccountMoveInherit(models.Model):
@@ -15,6 +16,11 @@ class AccountMoveInherit(models.Model):
     def amnt_to_text(self, total):
         amnt_txt = self.env.user.company_id.currency_id.amount_to_text(total)
         return amnt_txt
+
+    def get_print_date(self):
+        now_utc_date = datetime.now()
+        now_dubai = now_utc_date.astimezone(timezone('Asia/Karachi'))
+        return now_dubai.strftime('%d/%m%Y %H:%M:%S')
 
 
 class AccountPaymentInherit(models.Model):
