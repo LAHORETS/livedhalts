@@ -20,7 +20,7 @@ class AccountMoveInherit(models.Model):
     def get_print_date(self):
         now_utc_date = datetime.now()
         now_dubai = now_utc_date.astimezone(timezone('Asia/Karachi'))
-        return now_dubai.strftime('%d/%m%Y %H:%M:%S')
+        return now_dubai.strftime('%d/%m/%Y %H:%M:%S')
 
 
 class AccountPaymentInherit(models.Model):

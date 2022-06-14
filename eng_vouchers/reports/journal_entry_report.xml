@@ -9,4 +9,27 @@
 			name="eng_vouchers.journal_entry_template"
 	/>
 
+	<template id="so_report_invoice_inherit_app" inherit_id="account.report_invoice_document">
+		<xpath expr="//div[hasclass('page')]" position="inside">
+			<div class="row" style="margin-top:150px;">
+				<div class="col-xs-4">
+					<strong>Prepared By:</strong>
+					<span style="margin-left:7px;" t-field="o.user_id.name"/>
+				</div>
+
+				<div class="col-xs-4" style="margin-left:40px;">
+					<strong>Checked By:</strong>
+				</div>
+
+				<div class="col-xs-4" style="margin-left:250px;">
+					<strong>Verified By:</strong>
+				</div>
+
+				<div class="col-xs-4" style="margin-left:250px;">
+					<strong>Approved By:</strong>
+				</div>
+			</div>
+		</xpath>
+	</template>
+
 </odoo>
