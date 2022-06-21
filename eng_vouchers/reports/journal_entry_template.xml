@@ -49,8 +49,6 @@
                             </div>
                         </div>
                     </div>
-
-
                     <br/>
                     <br/>
                     <table style="border-collapse: collapse;width: 100%;" class="table table-condensed">
@@ -58,6 +56,7 @@
                             <tr>
                                 <th>Partner</th>
                                 <th>Account</th>
+                                <th>Account Type</th>
                                 <th>Description</th>
                                 <th>Due Date</th>
                                 <th>Analytic Account</th>
@@ -76,6 +75,9 @@
                                     </td>
                                     <td>
                                         <span t-field="line.account_id"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.account_id.user_type_id.name"/>
                                     </td>
                                     <td>
                                         <span t-field="line.name"/>
