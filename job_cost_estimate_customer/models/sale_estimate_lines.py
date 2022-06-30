@@ -70,7 +70,7 @@ class SaleEstimatelineJob(models.Model):
         store=True,
     )
 
-    @api.multi
+    # @api.multi
     @api.onchange('product_id')
     def product_id_change(self):
         if not self.product_id:
@@ -115,7 +115,7 @@ class SaleEstimatelineJob(models.Model):
             return {'warning': warning}
         return {'domain': domain}
 
-    @api.multi
+    # @api.multi
     def _compute_tax_id(self):
         for line in self:
             fpos = line.estimate_id.partner_id.property_account_position_id
@@ -124,7 +124,7 @@ class SaleEstimatelineJob(models.Model):
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.estimate_id.partner_id) if fpos else taxes
             
     
-    @api.multi
+    # @api.multi
     def _get_display_price(self, product):
         if self.estimate_id.pricelist_id.discount_policy == 'without_discount':
             from_currency = self.estimate_id.company_id.currency_id

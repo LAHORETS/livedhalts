@@ -178,41 +178,41 @@ class SaleEstimateJob(models.Model):
             rec.pricelist_id = partner.property_product_pricelist.id
             rec.payment_term_id = partner.property_payment_term_id.id
             
-    @api.multi
+    # @api.multi
     def estimate_send(self):
         for rec in self:
             rec.state = 'sent'
             
-    @api.multi
+    # @api.multi
     def estimate_confirm(self):
         for rec in self:
             if not rec.estimate_ids and not rec.labour_estimate_line_ids and not rec.overhead_estimate_line_ids:
                 raise UserError(_('Please enter Estimation Lines!'))
             rec.state = 'confirm'
             
-    @api.multi
+    # @api.multi
     def estimate_approve(self):
         for rec in self:
             if not rec.estimate_ids and not rec.labour_estimate_line_ids and not rec.overhead_estimate_line_ids:
                 raise UserError(_('Please enter Estimation Lines!'))
             rec.state = 'approve'
             
-    @api.multi
+    # @api.multi
     def estimate_quotesend(self):
         for rec in self:
             rec.state = 'quotesend'
             
-    @api.multi
+    # @api.multi
     def estimate_cancel(self):
         for rec in self:
             rec.state = 'cancel'
         
-    @api.multi
+    # @api.multi
     def estimate_reject(self):
         for rec in self:
             rec.state = 'reject'
             
-    @api.multi
+    # @api.multi
     def reset_todraft(self):
         for rec in self:
             rec.state = 'draft'
@@ -226,7 +226,7 @@ class SaleEstimateJob(models.Model):
         res = super(SaleEstimateJob, self).create(vals)
         return res
         
-    @api.multi
+    # @api.multi
     def action_estimate_send(self):
         if self.state == 'sent' or self.state == 'approve' or self.state == 'quotesend' or self.state == 'confirm':
             '''
@@ -255,7 +255,7 @@ class SaleEstimateJob(models.Model):
             })
             return {
                 'type': 'ir.actions.act_window',
-                'view_type': 'form',
+                # 'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'mail.compose.message',
                 'views': [(compose_form_id, 'form')],
@@ -290,7 +290,7 @@ class SaleEstimateJob(models.Model):
             })
             return {
                 'type': 'ir.actions.act_window',
-                'view_type': 'form',
+                # 'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'mail.compose.message',
                 'views': [(compose_form_id, 'form')],
@@ -299,7 +299,7 @@ class SaleEstimateJob(models.Model):
                 'context': ctx,
             }
         
-    @api.multi
+    # @api.multi
     def _prepare_quotation_line(self,quotation):
         quo_line_obj = self.env['sale.order.line']
         for rec in self:
@@ -344,7 +344,7 @@ class SaleEstimateJob(models.Model):
                                 }
                 quo_line = quo_line_obj.create(vals1)
         
-    @api.multi
+    # @api.multi
     def estimate_to_quotation(self):
         quo_obj = self.env['sale.order']
         quo_line_obj = self.env['sale.order.line']
